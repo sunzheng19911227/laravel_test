@@ -20,6 +20,9 @@ class ProductSubController extends AdminBaseController
     //  查看子商品列表
     public function show($id){
     	// 主商品信息
+
+
+    	
     	$product = Product::findOrFail($id);
     	$this->data['product'] = $product->toArray();
     	// 子商品信息
