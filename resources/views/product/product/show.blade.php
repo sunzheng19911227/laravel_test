@@ -86,7 +86,7 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
-                                        <a href="{{ url('/product/product_sub/create') }}"><button id="add—admin" class="btn btn-primary">
+                                        <a href="{{ url('/product/product_sub/create/'.$product['id']) }}"><button id="add—admin" class="btn btn-primary">
                                             添加子商品 <i class="fa fa-plus"></i>
                                         </button></a>
                                     </div>
@@ -137,7 +137,7 @@
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['productNo'] }}</td>
                                             <td class="center">{{ $list['is_show'] }}</td>
-                                            <td><a href="{{ url('/product/attr/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            <td><a href="{{ url('/product/product_sub/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>
                                         @endforeach
@@ -217,7 +217,7 @@
     });
     
     function setDeleteFromAction(id){
-        $("#delete-form").attr("action", "/product/attr/"+id);
+        $("#delete-form").attr("action", "/product/product_sub/"+id);
     }
 </script>
 

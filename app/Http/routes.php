@@ -30,12 +30,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
 	Route::get('/roles/{id}/assign', 'RoleController@assign');
 	Route::post('/roles/{id}/assign', 'RoleController@assign_update');
 	Route::resource('/roles', 'RoleController');
-	
 });
 
 //  商品管理
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => 'auth'], function() {
 	Route::resource('/products', 'ProductController');
+	Route::get('/product_sub/create/{id}', 'ProductSubController@create');
 	Route::resource('/product_sub', 'ProductSubController');
 	Route::resource('/category', 'CategoryController');
 	Route::resource('/supplier', 'SupplierController');

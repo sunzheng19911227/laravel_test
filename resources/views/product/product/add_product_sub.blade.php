@@ -12,6 +12,8 @@
   <!--common-->
   <link href="{{ asset('/assets/admin/css/style.css') }}" rel="stylesheet">
   <link href="{{ asset('/assets/admin/css/style-responsive.css') }}" rel="stylesheet">
+  <!--file upload-->
+  <link rel="stylesheet" type="text/css" href="{{ asset('/assets/admin/css/bootstrap-fileupload.min.css') }}" />
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -73,103 +75,90 @@
                             商品添加
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/products') }}">
-                                {{ csrf_field() }}
+                            <form role="form" class="form-horizontal adminex-form" method="POST" enctype="multipart/form-data" action="{{ url('/product/product_sub') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="product_id" value="{{ $product_id }}">
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group{{ $errors->has('supplier_id') ? ' has-error' : '' }}">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">供应商</label>
+                                <div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">商品编号</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control m-bot15" name="supplier_id">
-                                            <option>请选择供应商</option>
-                                            @if(!empty($supplier_lists))
-                                            @foreach($supplier_lists as $list)
-                                            <option value="{{ $list['id'] }}" 
-                                            >{{ $list['name']}}</option>
-                                            @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('brand_id') ? ' has-error' : '' }}">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">品牌</label>
-                                    <div class="col-lg-10">
-                                        <select class="form-control m-bot15" name="brand_id">
-                                            <option>请选择品牌</option>
-                                            @if(!empty($brand_lists))
-                                            @foreach($brand_lists as $list)
-                                            <option value="{{ $list['id'] }}" 
-                                            >{{ $list['name']}}</option>
-                                            @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类型</label>
-                                    <div class="col-lg-10">
-                                        <select class="form-control m-bot15" name="category_id">
-                                            <option>请选择类型</option>
-                                            @if(!empty($category_lists))
-                                            @foreach($category_lists as $list)
-                                            <option value="{{ $list['id'] }}" 
-                                            >{{ $list['name']}}</option>
-                                            @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">名称</label>
-                                    <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ old('name') }}">
-                                        @if ($errors->has('name'))
-                                        <p class="help-block">{{ $errors->first('name') }}</p>
+                                        <input type="text" placeholder="" id="productNo" name="productNo" class="form-control" value="{{ old('productNo') }}">
+                                        @if ($errors->has('productNo'))
+                                        <p class="help-block">{{ $errors->first('productNo') }}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group{{ $errors->has('details') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">商品详情</label>
+                                <div class="form-group{{ $errors->has('price') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">商品原价</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="details" name="details" class="form-control" value="{{ old('details') }}">
-                                        @if ($errors->has('details'))
-                                        <p class="help-block">{{ $errors->first('details') }}</p>
+                                        <input type="text" placeholder="" id="price" name="price" class="form-control" value="{{ old('price') }}">
+                                        @if ($errors->has('price'))
+                                        <p class="help-block">{{ $errors->first('price') }}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">商品描述</label>
+                                <div class="form-group{{ $errors->has('sale_price') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">推荐价格</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="description" name="description" class="form-control" value="{{ old('description') }}">
-                                        @if ($errors->has('description'))
-                                        <p class="help-block">{{ $errors->first('description') }}</p>
+                                        <input type="text" placeholder="" id="sale_price" name="sale_price" class="form-control" value="{{ old('sale_price') }}">
+                                        @if ($errors->has('sale_price'))
+                                        <p class="help-block">{{ $errors->first('sale_price') }}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group{{ $errors->has('seo_keywords') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">seo_keywords</label>
+                                <div class="form-group{{ $errors->has('review') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">审核状态</label>
+                                    <div class="col-md-7">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="review" checked="checked" value="1"> 
+                                            通过
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="review" value="0"> 
+                                            不通过
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('is_show') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">上架状态</label>
+                                    <div class="col-md-7">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_show" checked="checked" value="1"> 
+                                            上架
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="is_show" value="0"> 
+                                            下架
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('sort_order') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">排序</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="seo_keywords" name="seo_keywords" class="form-control" value="{{ old('seo_keywords') }}">
-                                        @if ($errors->has('seo_keywords'))
-                                        <p class="help-block">{{ $errors->first('seo_keywords') }}</p>
+                                        <input type="text" placeholder="" id="sort_order" name="sort_order" class="form-control" value="{{ old('sort_order') }}">
+                                        @if ($errors->has('sort_order'))
+                                        <p class="help-block">{{ $errors->first('sort_order') }}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group{{ $errors->has('seo_description') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">seo_description</label>
-                                    <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="seo_description" name="seo_description" class="form-control" value="{{ old('seo_description') }}">
-                                        @if ($errors->has('seo_description'))
-                                        <p class="help-block">{{ $errors->first('seo_description') }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('label') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">seo_description</label>
-                                    <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="label" name="label" class="form-control" value="{{ old('label') }}">
-                                        @if ($errors->has('label'))
-                                        <p class="help-block">{{ $errors->first('label') }}</p>
-                                        @endif
+                                <div class="form-group last">
+                                    <label class="control-label col-lg-2">Image Upload</label>
+                                    <div class="col-md-9">
+                                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                                <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                            </div>
+                                            <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                            <div>
+                                                   <span class="btn btn-default btn-file">
+                                                   <span class="fileupload-new"><i class="fa fa-paper-clip"></i> Select image</span>
+                                                   <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                                   <input type="file" name="file" class="default" />
+                                                   </span>
+                                                <a href="form_advanced_components.html#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash"></i> Remove</a>
+                                            </div>
+                                        </div>
+                                        <br/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -209,6 +198,8 @@
 
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
+<!--file upload-->
+<script type="text/javascript" src="{{ asset('/assets/admin/js/bootstrap-fileupload.min.js') }}"></script>
 
 </body>
 </html>

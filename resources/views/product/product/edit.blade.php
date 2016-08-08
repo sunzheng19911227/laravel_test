@@ -70,110 +70,124 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性组编辑
+                            主商品编辑
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr/'.$data['id']) }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/products/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
+                                <div class="form-group{{ $errors->has('supplier_id') ? ' has-error' : '' }}">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">供应商</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" name="supplier_id">
+                                            <option>请选择供应商</option>
+                                            @if(!empty($supplier_lists))
+                                            @foreach($supplier_lists as $list)
+                                            <option value="{{ $list['id'] }}" 
+                                            @if($data['supplier_id'] == $list['id'])
+                                            selected="selected" 
+                                            @endif
+                                            >{{ $list['name']}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('brand_id') ? ' has-error' : '' }}">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">品牌</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" name="brand_id">
+                                            <option>请选择品牌</option>
+                                            @if(!empty($brand_lists))
+                                            @foreach($brand_lists as $list)
+                                            <option value="{{ $list['id'] }}"
+                                            @if($data['brand_id'] == $list['id'])
+                                            selected="selected" 
+                                            @endif 
+                                            >{{ $list['name']}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类型</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" name="category_id">
+                                            <option>请选择类型</option>
+                                            @if(!empty($category_lists))
+                                            @foreach($category_lists as $list)
+                                            <option value="{{ $list['id'] }}"
+                                            @if($data['category_id'] == $list['id'])
+                                            selected="selected" 
+                                            @endif 
+                                            >{{ $list['name']}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">名称</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name']:old('name') }}">
-                                        @if ($errors->has('name'))
+                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name'])?$data['name']:old('name') }}">
+                                        @if($errors->has('name'))
                                         <p class="help-block">{{ $errors->first('name') }}</p>
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入框类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 复选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 单选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 4)
-                                            checked="checked" 
-                                            @endif
-                                            value="4"> 时间框
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入值类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 数字
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 日期
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">状态</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="status" 
-                                            @if($data['status'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 
-                                            显示
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="status"
-                                            @if($data['status'] === 0)
-                                            checked="checked" 
-                                            @endif
-                                            value="0"> 
-                                            隐藏
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('sort_order') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">排序</label>
+                                <div class="form-group{{ $errors->has('details') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">商品详情</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="sort_order" name="sort_order" class="form-control" value="{{ isset($data['sort_order']) ? $data['sort_order']:old('sort_order') }}">
-                                        @if ($errors->has('sort_order'))
-                                        <p class="help-block">{{ $errors->first('sort_order') }}</p>
+                                        <div class="col-lg-10">
+                                        @include('UEditor::head')
+                                        <!-- 加载编辑器的容器 -->
+                                        <script id="container" name="details" type="text/plain">{{ isset($data['details'])?$data['details']:old('details') }}</script>
+                                        @if ($errors->has('details'))
+                                        <p class="help-block">{{ $errors->first('details') }}</p>
+                                        @endif
+                                    </div>
+                                        @if ($errors->has('details'))
+                                        <p class="help-block">{{ $errors->first('details') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">商品描述</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="description" name="description" class="form-control" value="{{ isset($data['description'])?$data['description']:old('description') }}">
+                                        @if ($errors->has('description'))
+                                        <p class="help-block">{{ $errors->first('description') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('seo_keywords') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">seo_keywords</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="seo_keywords" name="seo_keywords" class="form-control" value="{{ isset($data['seo_keywords'])?$data['seo_keywords']:old('seo_keywords') }}">
+                                        @if ($errors->has('seo_keywords'))
+                                        <p class="help-block">{{ $errors->first('seo_keywords') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('seo_description') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">seo_description</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="seo_description" name="seo_description" class="form-control" value="{{ isset($data['seo_description'])?$data['seo_description']:old('seo_description') }}">
+                                        @if ($errors->has('seo_description'))
+                                        <p class="help-block">{{ $errors->first('seo_description') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('label') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">label</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="label" name="label" class="form-control" value="{{ isset($data['label'])?$data['label']:old('label') }}">
+                                        @if ($errors->has('label'))
+                                        <p class="help-block">{{ $errors->first('label') }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -216,5 +230,12 @@
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
 
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container');
+        ue.ready(function() {
+        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.    
+    });
+</script>
 </body>
 </html>

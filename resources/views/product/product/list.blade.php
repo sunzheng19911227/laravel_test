@@ -139,7 +139,7 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id']) }}">查看子商品</a></td>
-                                            <td><a href="{{ url('/product/attr/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            <td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>
                                         @endforeach
@@ -219,7 +219,7 @@
     });
     
     function setDeleteFromAction(id){
-        $("#delete-form").attr("action", "/product/attr/"+id);
+        $("#delete-form").attr("action", "/product/products/"+id);
     }
 </script>
 

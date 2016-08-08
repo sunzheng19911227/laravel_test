@@ -130,7 +130,9 @@
                                 <div class="form-group{{ $errors->has('details') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品详情</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="details" name="details" class="form-control" value="{{ old('details') }}">
+                                        @include('UEditor::head')
+                                        <!-- 加载编辑器的容器 -->
+                                        <script id="container" name="details" type="text/plain">{{ old('details') }}</script>
                                         @if ($errors->has('details'))
                                         <p class="help-block">{{ $errors->first('details') }}</p>
                                         @endif
@@ -164,7 +166,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group{{ $errors->has('label') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">seo_description</label>
+                                    <label class="col-lg-2 control-label">label</label>
                                     <div class="col-lg-10">
                                         <input type="text" placeholder="" id="label" name="label" class="form-control" value="{{ old('label') }}">
                                         @if ($errors->has('label'))
@@ -209,6 +211,14 @@
 
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
+
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('container');
+        ue.ready(function() {
+        ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.    
+    });
+</script>
 
 </body>
 </html>
