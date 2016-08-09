@@ -70,7 +70,7 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性组添加
+                            属性添加
                         </header>
                         <div class="panel-body">
                             <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr') }}">

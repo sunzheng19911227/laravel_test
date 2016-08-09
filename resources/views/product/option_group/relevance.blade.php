@@ -70,68 +70,30 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性值编辑
+                            关联属性
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr_value/'.$data['id']) }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/option_group/relevance_handle') }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="id" value="{{ $data['id'] }}">
-
+                                <input type="hidden" name="option_group_id" value="{{ $option_group['id'] }}">
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">属性名称</label>
+                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">选项组</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control m-bot15" name="attribute_id" disabled="disabled">
-                                            @if(!empty($lists))
-                                            @foreach($lists as $list)
-                                            <option value="{{ $list['id'] }}" 
-                                            @if($list['id'] == $data['id'] )
-                                            selected="selected"
-                                            @endif
-                                            >{{ $list['name']}}</option>
+                                        <input type="text" placeholder="" id="name" name="name" class="form-control" disabled="disabled" value="{{ $option_group['name'] }}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">属性</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" name="attr_id">
+                                            @if(!empty($attr))
+                                            @foreach($attr as $a)
+                                            <option value="{{ $a['id'] }}" >{{ $a['name']}}</option>
                                             @endforeach
                                             @endif
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">名称</label>
-                                    <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name']:old('name') }}">
-                                        @if ($errors->has('name'))
-                                        <p class="help-block">{{ $errors->first('name') }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">状态</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="status" 
-                                            @if($data['status'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 
-                                            显示
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="status"
-                                            @if($data['status'] === 0)
-                                            checked="checked" 
-                                            @endif
-                                            value="0"> 
-                                            隐藏
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group{{ $errors->has('sort_order') ? ' has-error' : '' }}">
-                                    <label class="col-lg-2 control-label">排序</label>
-                                    <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="sort_order" name="sort_order" class="form-control" value="{{ isset($data['sort_order']) ? $data['sort_order']:old('sort_order') }}">
-                                        @if ($errors->has('sort_order'))
-                                        <p class="help-block">{{ $errors->first('sort_order') }}</p>
-                                        @endif
                                     </div>
                                 </div>
 

@@ -70,14 +70,14 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性添加
+                            属性值添加
                         </header>
                         <div class="panel-body">
                             <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr_value') }}">
                                 {{ csrf_field() }}
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">上级菜单</label>
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">属性名称</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="attribute_id">
                                             @if(!empty($lists))

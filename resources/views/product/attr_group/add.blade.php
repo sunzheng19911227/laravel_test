@@ -70,100 +70,43 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性编辑
+                            属性组添加
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr/'.$data['id']) }}">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="id" value="{{ $data['id'] }}">
-
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr_group') }}">
+                                {{ csrf_field() }}
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类别</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" name="category_id">
+                                            @if(!empty($category))
+                                            @foreach($category as $c)
+                                            <option value="{{ $c['id'] }}"
+                                            >{{ $c['name']}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">名称</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name']:old('name') }}">
+                                        <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ old('name') }}">
                                         @if ($errors->has('name'))
                                         <p class="help-block">{{ $errors->first('name') }}</p>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入框类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 复选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 单选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 4)
-                                            checked="checked" 
-                                            @endif
-                                            value="4"> 时间框
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入值类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 数字
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 日期
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-lg-2 control-label">状态</label>
                                     <div class="col-md-7">
                                         <label class="radio-inline">
-                                            <input type="radio" name="status" 
-                                            @if($data['status'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 
+                                            <input type="radio" name="status" checked="checked" value="1"> 
                                             显示
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="status"
-                                            @if($data['status'] === 0)
-                                            checked="checked" 
-                                            @endif
-                                            value="0"> 
+                                            <input type="radio" name="status" value="0"> 
                                             隐藏
                                         </label>
                                     </div>
@@ -171,13 +114,12 @@
                                 <div class="form-group{{ $errors->has('sort_order') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">排序</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="sort_order" name="sort_order" class="form-control" value="{{ isset($data['sort_order']) ? $data['sort_order']:old('sort_order') }}">
+                                        <input type="text" placeholder="" id="sort_order" name="sort_order" class="form-control" value="{{ old('sort_order') }}">
                                         @if ($errors->has('sort_order'))
                                         <p class="help-block">{{ $errors->first('sort_order') }}</p>
                                         @endif
                                     </div>
                                 </div>
-
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
                                         <button class="btn btn-primary" type="submit">Submit</button>

@@ -70,15 +70,31 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性编辑
+                            选项组编辑
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr/'.$data['id']) }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/option_group/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类别</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control m-bot15" disabled="disabled" name="category_id">
+                                            @if(!empty($category))
+                                            @foreach($category as $c)
+                                            <option value="{{ $c['id'] }}"
+                                            @if($option_group['id'] === $c['id'])
+                                            selected="selected"
+                                            @endif
+                                            >{{ $c['name']}}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">名称</label>
                                     <div class="col-lg-10">
@@ -86,65 +102,6 @@
                                         @if ($errors->has('name'))
                                         <p class="help-block">{{ $errors->first('name') }}</p>
                                         @endif
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入框类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 复选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 单选框
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_box_type"
-                                            @if($data['input_box_type'] === 4)
-                                            checked="checked" 
-                                            @endif
-                                            value="4"> 时间框
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-lg-2 control-label">输入值类型</label>
-                                    <div class="col-md-7">
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 1)
-                                            checked="checked" 
-                                            @endif
-                                            value="1"> 文本
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 2)
-                                            checked="checked" 
-                                            @endif
-                                            value="2"> 数字
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" name="input_value_type"
-                                            @if($data['input_value_type'] === 3)
-                                            checked="checked" 
-                                            @endif
-                                            value="3"> 日期
-                                        </label>
                                     </div>
                                 </div>
                                 <div class="form-group">

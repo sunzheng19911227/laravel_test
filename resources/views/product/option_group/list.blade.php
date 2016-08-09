@@ -56,11 +56,11 @@
             <!-- page heading start-->
             <div class="page-heading">
                 <h3>
-                    属性列表
+                    选项组列表
                 </h3>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="editable_table.html#">属性列表</a>
+                        <a href="editable_table.html#">选项组列表</a>
                     </li>
                     <li>
                         <a href="editable_table.html#">Data Table</a>
@@ -76,7 +76,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性列表
+                            选项组列表
                             <span class="tools pull-right">
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                                 <a href="javascript:;" class="fa fa-times"></a>
@@ -86,13 +86,8 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
-                                        <a href="{{ url('/product/attr/create') }}"><button id="add—admin" class="btn btn-primary">
-                                            添加属性 <i class="fa fa-plus"></i>
-                                        </button></a>
-                                    </div>
-                                    <div class="btn-group">
-                                        <a href="{{ url('/product/attr_value/create') }}"><button id="add—admin" class="btn btn-primary">
-                                            添加属性值 <i class="fa fa-plus"></i>
+                                        <a href="{{ url('/product/option_group/create') }}"><button id="add—admin" class="btn btn-primary">
+                                            添加选项组 <i class="fa fa-plus"></i>
                                         </button></a>
                                     </div>
                                     <div class="btn-group pull-right">
@@ -130,9 +125,9 @@
                                     <thead>
                                         <tr>
                                             <th>id</th>
-                                            <th>属性名称</th>
+                                            <th>选项组名称</th>
                                             <th>Status</th>
-                                            <th>查看属性值</th>
+                                            <th>查看选项</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
@@ -143,8 +138,8 @@
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
-                                            <td><a href="{{ url('/product/attr_value/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/attr/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            <td><a href="{{ url('/product/option_group/'.$list['id']) }}">Show</a></td>
+                                            <td><a href="{{ url('/product/option_group/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>
                                         @endforeach
@@ -224,7 +219,7 @@
     });
     
     function setDeleteFromAction(id){
-        $("#delete-form").attr("action", "/product/attr/"+id);
+        $("#delete-form").attr("action", "/product/option_group/"+id);
     }
 </script>
 

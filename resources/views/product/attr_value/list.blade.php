@@ -56,11 +56,11 @@
             <!-- page heading start-->
             <div class="page-heading">
                 <h3>
-                    属性列表
+                    属性值列表
                 </h3>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="editable_table.html#">属性列表</a>
+                        <a href="editable_table.html#">属性值列表</a>
                     </li>
                     <li>
                         <a href="editable_table.html#">Data Table</a>
@@ -76,7 +76,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            属性列表
+                            属性值列表
                             <span class="tools pull-right">
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                                 <a href="javascript:;" class="fa fa-times"></a>
@@ -87,7 +87,7 @@
                                 <div class="clearfix">
                                     <div class="btn-group">
                                         <a href="{{ url('/product/attr_value/create_value/'.$attr->id) }}"><button id="add—admin" class="btn btn-primary">
-                                            添加属性 <i class="fa fa-plus"></i>
+                                            添加属性值 <i class="fa fa-plus"></i>
                                         </button></a>
                                     </div>
                                     <div class="btn-group pull-right">
@@ -125,8 +125,8 @@
                                     <thead>
                                         <tr>
                                             <th>id</th>
-                                            <th>属性组名称</th>
                                             <th>属性名称</th>
+                                            <th>属性值</th>
                                             <th>Status</th>
                                             <th>Edit</th>
                                             <th>Delete</th>

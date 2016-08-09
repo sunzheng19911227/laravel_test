@@ -7,8 +7,10 @@ use App\Product;
 use App\Supplier;
 use App\Brand;
 use App\Category;
+use App\AttrGroup;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
+use App\Http\Controllers\FormController;
 
 class ProductController extends AdminBaseController
 {
@@ -100,5 +102,24 @@ class ProductController extends AdminBaseController
     	} else {
     		return redirect('/product/products')->withWarning('删除失败!');
     	}
+    }
+
+    public function ajax_create_form(Request $request) {
+        $form = array();
+
+        // 根据category_id获取属性和属性值
+        $category = Category::findOrFail($request->input('category_id'));
+        $attr_group = $category->attr_group->toArray();
+        //$attr = $attr_group->attr;
+        //var_dump($attr_group);
+        foreach($attr_group as $group){
+            $attr_group = AttrGroup::findOrFail($group['id']);
+            //var_dump($attr_group->attr->toArray());
+            $attr = $attr_group->attr->toArray();
+        }
+        exit;
+        $form = new FormController;
+        $select = array('1'=>'下拉框1','2'=>'下拉框2');
+        echo $form->create_checkbox('下拉框','test',$select);
     }
 }

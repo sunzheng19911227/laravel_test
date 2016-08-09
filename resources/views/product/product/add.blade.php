@@ -74,7 +74,8 @@
                         </header>
                         <div class="panel-body">
                             <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/products') }}">
-                                {{ csrf_field() }}
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <meta name="_token" content="{{ csrf_token() }}">
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group{{ $errors->has('supplier_id') ? ' has-error' : '' }}">
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">供应商</label>
@@ -107,7 +108,7 @@
                                 <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类型</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control m-bot15" name="category_id">
+                                        <select class="form-control m-bot15" name="category_id" id="category_id" onchange="create_form()">
                                             <option>请选择类型</option>
                                             @if(!empty($category_lists))
                                             @foreach($category_lists as $list)
@@ -117,6 +118,8 @@
                                             @endif
                                         </select>
                                     </div>
+                                </div>
+                                <div id="form_test">
                                 </div>
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">名称</label>
@@ -218,6 +221,24 @@
         ue.ready(function() {
         ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.    
     });
+
+    function create_form(){
+       category_id = $('#category_id').val();
+
+       $.ajax({
+            type: "post",
+            url: "/product/products/ajax_create_form",
+            data: { category_id : category_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            dataType: "html",
+            success: function (data) {
+                console.log(data);
+                $('#form_test').html(data);
+            }
+        });
+    }
 </script>
 
 </body>
