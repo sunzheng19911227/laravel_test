@@ -8,6 +8,7 @@ use App\Supplier;
 use App\Brand;
 use App\Category;
 use App\AttrGroup;
+use App\Attr;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\FormController;
@@ -115,7 +116,10 @@ class ProductController extends AdminBaseController
         foreach($attr_group as $group){
             $attr_group = AttrGroup::findOrFail($group['id']);
             //var_dump($attr_group->attr->toArray());
-            $attr = $attr_group->attr->toArray();
+            $attrs = $attr_group->attr->toArray();
+            foreach($attrs as $attr){
+                Attr::findOrFail($attr['id']);
+            }
         }
         exit;
         $form = new FormController;
