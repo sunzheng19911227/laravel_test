@@ -98,7 +98,7 @@
                                             <input type="radio" name="input_box_type" value="3"> 单选框
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="input_box_type" value="4"> 时间框
+                                            <input type="radio" name="input_box_type" value="4"> 下拉框
                                         </label>
                                     </div>
                                 </div>

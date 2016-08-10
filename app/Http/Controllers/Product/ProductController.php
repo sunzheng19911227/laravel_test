@@ -50,6 +50,8 @@ class ProductController extends AdminBaseController
     }
 
     public function store(Request $request) {
+        //var_dump($request->except('_token'));
+        //exit;
     	$product = new Product;
     	$product->supplier_id = $request->input('supplier_id');
     	$product->brand_id = $request->input('brand_id');
@@ -60,9 +62,28 @@ class ProductController extends AdminBaseController
     	$product->seo_keywords = $request->input('seo_keywords');
     	$product->seo_description = $request->input('seo_description');
     	$product->label = $request->input('label');
+        // 筛选出属性字段
+        $json = array();
+        var_dump($request->all());
+        foreach($request->except('_token') as $field=>$value){
+            if( substr($field, 0, 5) == 'attr_' ){
+                $field = substr($field, 5);
+                $attr_type = Attr::where('input_name','=',$field)->get()->toArray();
+                $attr_type = call_user_func_array('array_merge',$attr_type);   // 二维转一维
+                var_dump($attr_type);
+                if($attr_type['input_box_type'] != 1){
+                    $json[] = '';
+                } else {
+                    $json[] = array($field=>$value);  
+                }
+            }
+        }
+        var_dump($json);
+        exit;
+        $product->public_attr = json_encode($json);
     	$result = $product->save();
 
-    	if($result){
+    	if($result) {
     		return redirect('/product/products')->withSuccess('添加成功!');
     	} else {
     		return redirect('/product/products')->withWarning('添加失败!');
@@ -105,25 +126,65 @@ class ProductController extends AdminBaseController
     	}
     }
 
+    // 自动生成表单
     public function ajax_create_form(Request $request) {
-        $form = array();
+        $form_data = array();
+        $default_value_data = array();
+        // 获取商品属性信息
+        if($request->input('product_id') !== null){
+            $product = Product::findOrFail($request->input('product_id'))->toArray();
+            //var_dump($product);
+            $public_attr = json_decode($product['public_attr'],true);
+            foreach($public_attr as $attr){
+                foreach($attr as $key=>$value) {
+                    $default_value_data[$key] = $value;
+                }
+            }
+            //var_dump($default_value_data);
+        }
 
         // 根据category_id获取属性和属性值
         $category = Category::findOrFail($request->input('category_id'));
         $attr_group = $category->attr_group->toArray();
-        //$attr = $attr_group->attr;
-        //var_dump($attr_group);
-        foreach($attr_group as $group){
+        foreach($attr_group as $group) {
             $attr_group = AttrGroup::findOrFail($group['id']);
-            //var_dump($attr_group->attr->toArray());
             $attrs = $attr_group->attr->toArray();
-            foreach($attrs as $attr){
-                Attr::findOrFail($attr['id']);
+            foreach($attrs as $attr) {
+                $array = array();
+                $attr_value = Attr::findOrFail($attr['id'])->AttrValue->toArray();
+                foreach($attr_value as $a) {
+                    $array['item'][$a['id']] = $a['name'];
+                }
+                $array['label_name'] = $attr['name'];
+                $array['input_name'] = 'attr_'.$attr['input_name'];
+                $array['input_box_type'] = $attr['input_box_type'];
+                $array['input_value_type'] = $attr['input_value_type'];
+                $form_data[] = $array;
             }
         }
-        exit;
-        $form = new FormController;
-        $select = array('1'=>'下拉框1','2'=>'下拉框2');
-        echo $form->create_checkbox('下拉框','test',$select);
+        //var_dump($form_data);
+        $html = '';
+        if(!empty($form_data)) {
+            $form = new FormController;
+            $input_box = array( '1'=>'create_text',       // 输入框
+                                '2'=>'create_checkbox',   // 复选框
+                                '3'=>'create_radio',      // 单选框
+                                '4'=>'create_select',     // 下拉框
+                                );
+            foreach($form_data as $data) {
+                $default_value = '';
+                foreach ($default_value_data as $key => $value) {
+                    if($key == substr($data['input_name'], 5) ){
+                         $default_value = $value;
+                    }
+                }
+                if($data['input_box_type'] == '1') {
+                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value);
+                } else {
+                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item']);
+                }
+            }
+        }
+        echo $html;
     }
 }

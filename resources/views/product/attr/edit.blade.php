@@ -117,7 +117,7 @@
                                             @if($data['input_box_type'] === 4)
                                             checked="checked" 
                                             @endif
-                                            value="4"> 时间框
+                                            value="4"> 下拉框
                                         </label>
                                     </div>
                                 </div>

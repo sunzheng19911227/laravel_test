@@ -16,4 +16,7 @@ class Attr extends Model
     public function giveAttrValue($AttrValue){
     	return $this->AttrValue()->save($AttrValue);
     }
+
+    //   添加软删除
+    
 }
