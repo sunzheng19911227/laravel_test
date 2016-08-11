@@ -36,8 +36,11 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => 'auth'], function() {
 	Route::post('/products/ajax_create_form', 'ProductController@ajax_create_form');
 	Route::resource('/products', 'ProductController');
+
+	Route::post('/product_sub/ajax_create_form', 'ProductSubController@ajax_create_form');
 	Route::get('/product_sub/create/{id}', 'ProductSubController@create');
 	Route::resource('/product_sub', 'ProductSubController');
+	
 	Route::resource('/category', 'CategoryController');
 	Route::resource('/supplier', 'SupplierController');
 	Route::resource('/brand', 'BrandController');

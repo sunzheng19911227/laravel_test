@@ -12,7 +12,8 @@
   <!--common-->
   <link href="{{ asset('/assets/admin/css/style.css') }}" rel="stylesheet">
   <link href="{{ asset('/assets/admin/css/style-responsive.css') }}" rel="stylesheet">
-
+  <!--file upload-->
+  <link rel="stylesheet" type="text/css" href="{{ asset('/assets/admin/css/bootstrap-fileupload.min.css') }}" />
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
   <script src="js/html5shiv.js"></script>
@@ -73,10 +74,12 @@
                             商品添加
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/product_sub/'.$data['id']) }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" enctype="multipart/form-data" action="{{ url('/product/product_sub/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <meta name="_token" content="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="id" value="{{ $data['id'] }}">
+                                <input type="hidden" name="id" id='product_sub_id' value="{{ $data['id'] }}">
+                                <input type="hidden" name="product_id" id="product_id" value="{{ $data['product_id'] }}">
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品编号</label>
@@ -156,6 +159,32 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="form-group last">
+                                    <label class="control-label col-lg-2">Image Upload</label>
+                                    <div class="col-md-9">
+                                        <div class="fileupload {{ $data['image'] != ''?'fileupload-exists':'fileupload-new' }}" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                                <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
+                                            </div>
+                                            <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
+                                                @if($data['image'] != '')
+                                                <img src="{{ "/images/".$data['image'] }}" alt="" />
+                                                @endif
+                                            </div>
+                                            <div>
+                                                   <span class="btn btn-default btn-file">
+                                                   <span class="fileupload-new"><i class="fa fa-paper-clip"></i> Select image</span>
+                                                   <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                                   <input type="file" name="file" class="default" />
+                                                   </span>
+                                                <a href="form_advanced_components.html#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash"></i> Remove</a>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div id="form_test">
+                                </div>
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
                                         <button class="btn btn-primary" type="submit">Submit</button>
@@ -193,6 +222,32 @@
 
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
+<!--file upload-->
+<script type="text/javascript" src="{{ asset('/assets/admin/js/bootstrap-fileupload.min.js') }}"></script>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        create_form();
+    });
+
+    function create_form(){
+       product_id = $('#product_id').val();
+       product_sub_id = $('#product_sub_id').val();
+       $.ajax({
+            type: "post",
+            url: "/product/product_sub/ajax_create_form",
+            data: {product_id : product_id, product_sub_id : product_sub_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            dataType: "html",
+            success: function (data) {
+                console.log(data);
+                $('#form_test').html(data);
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

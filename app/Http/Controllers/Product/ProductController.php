@@ -9,6 +9,7 @@ use App\Brand;
 use App\Category;
 use App\AttrGroup;
 use App\Attr;
+use App\AttrValue;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\FormController;
@@ -62,24 +63,33 @@ class ProductController extends AdminBaseController
     	$product->seo_keywords = $request->input('seo_keywords');
     	$product->seo_description = $request->input('seo_description');
     	$product->label = $request->input('label');
-        // 筛选出属性字段
+
+        // 筛选出属性字段,并处理成json串
         $json = array();
-        var_dump($request->all());
         foreach($request->except('_token') as $field=>$value){
             if( substr($field, 0, 5) == 'attr_' ){
                 $field = substr($field, 5);
                 $attr_type = Attr::where('input_name','=',$field)->get()->toArray();
                 $attr_type = call_user_func_array('array_merge',$attr_type);   // 二维转一维
-                var_dump($attr_type);
                 if($attr_type['input_box_type'] != 1){
-                    $json[] = '';
+                    // 获取属性值的名称
+                    $array = array();
+                    if(is_array($value)) {
+                        foreach($value as $v) {
+                            $attr_value = AttrValue::findOrFail($v)->toArray();
+                            $array[$v] = $attr_value['name'];
+                        }
+                    }else{
+                        $attr_value = AttrValue::findOrFail($value)->toArray();
+                        $array[$value] = $attr_value['name'];
+                    }
+                    $json[$field] = $array;
                 } else {
-                    $json[] = array($field=>$value);  
+                    $json[$field] = $value;  
                 }
             }
         }
-        var_dump($json);
-        exit;
+
         $product->public_attr = json_encode($json);
     	$result = $product->save();
 
@@ -96,7 +106,8 @@ class ProductController extends AdminBaseController
     	return view('product.product.edit', $this->data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id) {
+
     	$product = Product::findOrFail($id);
     	$product->supplier_id = $request->input('supplier_id');
     	$product->brand_id = $request->input('brand_id');
@@ -107,6 +118,33 @@ class ProductController extends AdminBaseController
     	$product->seo_keywords = $request->input('seo_keywords');
     	$product->seo_description = $request->input('seo_description');
     	$product->label = $request->input('label');
+
+        // 筛选出属性字段,并处理成json串
+        $json = array();
+        foreach($request->except('_token') as $field=>$value){
+            if( substr($field, 0, 5) == 'attr_' ){
+                $field = substr($field, 5);
+                $attr_type = Attr::where('input_name','=',$field)->get()->toArray();
+                $attr_type = call_user_func_array('array_merge',$attr_type);   // 二维转一维
+                if($attr_type['input_box_type'] != 1){
+                    // 获取属性值的名称
+                    $array = array();
+                    if(is_array($value)) {
+                        foreach($value as $v) {
+                            $attr_value = AttrValue::findOrFail($v)->toArray();
+                            $array[$v] = $attr_value['name'];
+                        }
+                    }else{
+                        $attr_value = AttrValue::findOrFail($value)->toArray();
+                        $array[$value] = $attr_value['name'];
+                    }
+                    $json[$field] = $array;
+                } else {
+                    $json[$field] = $value;  
+                }
+            }
+        }
+        $product->public_attr = json_encode($json);
     	$result = $product->save();
 
     	if($result){
@@ -133,20 +171,23 @@ class ProductController extends AdminBaseController
         // 获取商品属性信息
         if($request->input('product_id') !== null){
             $product = Product::findOrFail($request->input('product_id'))->toArray();
-            //var_dump($product);
             $public_attr = json_decode($product['public_attr'],true);
-            foreach($public_attr as $attr){
-                foreach($attr as $key=>$value) {
-                    $default_value_data[$key] = $value;
+            foreach($public_attr as $key=>$attr) {
+                if(is_array($attr)){
+                    foreach($attr as $k=>$value) {
+                        $default_value_data[$key][] = $k;
+                    }
+                } else {
+                    $default_value_data[$key] = $attr;
                 }
             }
-            //var_dump($default_value_data);
+            var_dump($default_value_data);
         }
 
         // 根据category_id获取属性和属性值
         $category = Category::findOrFail($request->input('category_id'));
-        $attr_group = $category->attr_group->toArray();
-        foreach($attr_group as $group) {
+        $attr_groups = $category->attr_group->toArray();
+        foreach($attr_groups as $group) {
             $attr_group = AttrGroup::findOrFail($group['id']);
             $attrs = $attr_group->attr->toArray();
             foreach($attrs as $attr) {
@@ -162,7 +203,7 @@ class ProductController extends AdminBaseController
                 $form_data[] = $array;
             }
         }
-        //var_dump($form_data);
+
         $html = '';
         if(!empty($form_data)) {
             $form = new FormController;
@@ -178,10 +219,11 @@ class ProductController extends AdminBaseController
                          $default_value = $value;
                     }
                 }
+                var_dump($default_value);
                 if($data['input_box_type'] == '1') {
                     $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value);
                 } else {
-                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item']);
+                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item'], $default_value);
                 }
             }
         }

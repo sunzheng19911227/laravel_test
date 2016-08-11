@@ -77,7 +77,9 @@
                         <div class="panel-body">
                             <form role="form" class="form-horizontal adminex-form" method="POST" enctype="multipart/form-data" action="{{ url('/product/product_sub') }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="product_id" value="{{ $product_id }}">
+                                <meta name="_token" content="{{ csrf_token() }}">
+                                <input type="hidden" name="product_id" id="product_id" value="{{ $product_id }}">
+
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品编号</label>
@@ -161,6 +163,8 @@
                                         <br/>
                                     </div>
                                 </div>
+                                <div id="form_test">
+                                </div>
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
                                         <button class="btn btn-primary" type="submit">Submit</button>
@@ -201,5 +205,31 @@
 <!--file upload-->
 <script type="text/javascript" src="{{ asset('/assets/admin/js/bootstrap-fileupload.min.js') }}"></script>
 
+<!--       -->
+<script type="text/javascript">
+    $(document).ready(function(){
+        create_form();
+    });
+
+    function create_form(){
+       //category_id = $('#category_id').val();
+       product_id = $('#product_id').val();
+
+       $.ajax({
+            type: "post",
+            url: "/product/product_sub/ajax_create_form",
+            data: {product_id : product_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            dataType: "html",
+            success: function (data) {
+                console.log(data);
+                $('#form_test').html(data);
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

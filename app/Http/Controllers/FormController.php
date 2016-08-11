@@ -9,7 +9,7 @@ use App\Http\Requests;
 class FormController extends Controller
 {
     // 生成文本框
-	public function create_text($label_name, $input_name, $default_value = '') {
+	public function create_text($label_name, $input_name, $default_value = '', $disabled = false) {
 		$str = <<<EOT
 			<div class="form-group">
 					<label class="col-lg-2 control-label">{$label_name}</label>
@@ -23,9 +23,13 @@ EOT;
 	}
 
 	// 生成下拉框
-	public function create_select($label_name, $select_name, $select_item, $selected_id = '') {
+	public function create_select($label_name, $select_name, $select_item, $selected_id = array()) {
 		$select_str = '<option>请选择</option>';
-		foreach($select_item as $key=>$item){
+		foreach($select_item as $key=>$item) {
+			$selected = '';
+	    	if(!empty($selected_id) && array_search($key, $selected_id) !== false){
+	    		$selected = 'selected = \"selected\" ';
+	    	}
 			$select_str .= '<option value="'.$key.'">'.$item.'</option>';
 		}
 
@@ -39,13 +43,17 @@ EOT;
 	}
 
 	// 生成单选框
-	public function create_radio($label_name, $radio_name, $radio_item, $checked_id = ''){
+	public function create_radio($label_name, $radio_name, $radio_item, $checked_id = array()){
 		$str = '<div class="form-group">
 	                <label class="col-lg-2 control-label">'.$label_name.'</label>
 	                <div class="col-md-7">';
-	    foreach($radio_item as $key=>$item){
+	    foreach($radio_item as $key=>$item) {
+	    	$checked = '';
+	    	if(!empty($checked_id) && array_search($key, $checked_id) !== false){
+	    		$checked = 'checked = \"checked\" ';
+	    	}
 	    	$str .= '<label class="radio-inline">
-                        <input type="radio" name="'.$radio_name.'" value="'.$key.'">'.$item.'
+                        <input type="radio" name="'.$radio_name.'" value="'.$key.'" ' . $checked . '>'.$item.'
                     </label>';
 	    }
 	    $str.= '    </div>
@@ -54,10 +62,18 @@ EOT;
 	}
 
 	// 生成复选框
-	public function create_checkbox($label_name, $checkbox_name, $checkbox_item, $checked_id = array()) {
+	public function create_checkbox($label_name, $checkbox_name, $checkbox_item, $checked_id = array(), $is_disabled = false) {
 		$checkbox = '';
 		foreach($checkbox_item as $key=>$item){
-			$checkbox .= '<input type="checkbox" name="'.$checkbox_name.'[]" value="'.$key.'"/>'.$item;
+			$checked = '';
+			$disabled = '';
+	    	if(!empty($checked_id) && array_search($key, $checked_id) !== false){
+	    		$checked = 'checked = \"checked\" ';
+	    	}
+	    	if($is_disabled === true){
+				$disabled = 'disabled = \"disabled\"';
+	    	}
+			$checkbox .= '<input type="checkbox" name="'.$checkbox_name.'[]" '.$checked.' value="'.$key.'" '.$disabled.'/>'.$item;
 		}
 		$str = '<div>
 	                <label>'.$label_name.'</label>
