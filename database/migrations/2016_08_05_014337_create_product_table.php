@@ -25,6 +25,7 @@ class CreateProductTable extends Migration
             $table->string('label')->default('');
             $table->text('public_attr')->default('');
             $table->timestamps();
+            $table->softDeletes();   // 软删除字段
         });
 
         Schema::create('product_sub', function(Blueprint $table) {
@@ -39,6 +40,7 @@ class CreateProductTable extends Migration
             $table->string('sort_order');
             $table->text('private_attr');
             $table->timestamps();
+            $table->softDeletes();    // 软删除字段
         });
     }
 
