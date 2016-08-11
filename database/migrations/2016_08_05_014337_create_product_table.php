@@ -14,25 +14,25 @@ class CreateProductTable extends Migration
     {
         Schema::create('product', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('supplier_id');
-            $table->integer('brand_id');
-            $table->integer('category_id');
-            $table->string('name');
-            $table->text('details');
-            $table->string('description');
-            $table->string('seo_keywords');
-            $table->string('seo_description');
-            $table->string('label');
-            $table->text('public_attr');
+            $table->integer('supplier_id')->index();
+            $table->integer('brand_id')->index();
+            $table->integer('category_id')->index();
+            $table->string('name')->index();
+            $table->text('details')->default('');
+            $table->string('description')->default('');
+            $table->string('seo_keywords')->default('');
+            $table->string('seo_description')->default('');
+            $table->string('label')->default('');
+            $table->text('public_attr')->default('');
             $table->timestamps();
         });
 
         Schema::create('product_sub', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id');
-            $table->string('productNo');
-            $table->decimal('price',10,2);
-            $table->decimal('sale_price',10,2);
+            $table->string('productNo')->uniqid();
+            $table->decimal('price', 10, 2)->default('0.00');
+            $table->decimal('sale_price', 10, 2)->default('0.00');
             $table->string('image');
             $table->tinyInteger('review');
             $table->tinyInteger('is_show');
