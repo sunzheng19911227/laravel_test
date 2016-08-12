@@ -26,17 +26,18 @@ CREATE TABLE IF NOT EXISTS `attr` (
   `sort_order` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 正在导出表  laravel_test.attr 的数据：~5 rows (大约)
 /*!40000 ALTER TABLE `attr` DISABLE KEYS */;
-INSERT INTO `attr` (`id`, `name`, `input_name`, `input_box_type`, `input_value_type`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
-	(2, '型号', 'model', 1, 1, 1, 0, '2016-08-04 07:24:40', '2016-08-04 07:24:40'),
-	(3, '颜色', 'color', 3, 1, 1, 1, '2016-08-10 10:02:37', '2016-08-10 10:02:37'),
-	(4, '多选框test', 'check_box', 2, 1, 1, 1, '2016-08-10 10:11:16', '2016-08-10 10:11:16'),
-	(5, '选项测试2', 'option_test', 2, 1, 1, 1, '2016-08-11 03:32:39', '2016-08-11 03:32:39'),
-	(6, '选项测试3', 'option_tests', 2, 1, 1, 1, '2016-08-11 04:12:35', '2016-08-11 04:12:35');
+INSERT INTO `attr` (`id`, `name`, `input_name`, `input_box_type`, `input_value_type`, `status`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(2, '型号', 'model', 1, 1, 1, 0, '2016-08-04 07:24:40', '2016-08-04 07:24:40', NULL),
+	(3, '颜色', 'color', 3, 1, 1, 1, '2016-08-10 10:02:37', '2016-08-10 10:02:37', NULL),
+	(4, '多选框test', 'check_box', 2, 1, 1, 1, '2016-08-10 10:11:16', '2016-08-10 10:11:16', NULL),
+	(5, '选项测试2', 'option_test', 2, 1, 1, 1, '2016-08-11 03:32:39', '2016-08-11 03:32:39', NULL),
+	(6, '选项测试3', 'option_tests', 2, 1, 1, 1, '2016-08-11 04:12:35', '2016-08-11 04:12:35', NULL);
 /*!40000 ALTER TABLE `attr` ENABLE KEYS */;
 
 
@@ -181,11 +182,10 @@ CREATE TABLE IF NOT EXISTS `category_attr_group` (
   CONSTRAINT `category_attr_group_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.category_attr_group 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.category_attr_group 的数据：~1 rows (大约)
 /*!40000 ALTER TABLE `category_attr_group` DISABLE KEYS */;
 INSERT INTO `category_attr_group` (`category_id`, `attr_group_id`) VALUES
-	(2, 7),
-	(2, 8);
+	(2, 7);
 /*!40000 ALTER TABLE `category_attr_group` ENABLE KEYS */;
 
 
@@ -199,11 +199,8 @@ CREATE TABLE IF NOT EXISTS `category_option_group` (
   CONSTRAINT `category_option_group_option_group_id_foreign` FOREIGN KEY (`option_group_id`) REFERENCES `option_group` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.category_option_group 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.category_option_group 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `category_option_group` DISABLE KEYS */;
-INSERT INTO `category_option_group` (`category_id`, `option_group_id`) VALUES
-	(2, 2),
-	(2, 3);
 /*!40000 ALTER TABLE `category_option_group` ENABLE KEYS */;
 
 
@@ -300,20 +297,20 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.permissions 的数据：~11 rows (大约)
+-- 正在导出表  laravel_test.permissions 的数据：~13 rows (大约)
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 INSERT INTO `permissions` (`id`, `pid`, `name`, `label`, `route`, `description`, `is_display`, `sort_order`, `created_at`, `updated_at`) VALUES
-	(1, 0, '权限模块', '权限模块', '#', '权限模块', 1, '', '2016-07-29 07:17:35', '2016-07-29 07:17:35'),
-	(4, 1, '管理员管理', '管理员管理', '/admin/admins', '管理员管理', 1, '', NULL, NULL),
-	(5, 4, '管理员添加', '管理员管理-添加', '/admin/admins/create', '管理员添加', 0, '', NULL, NULL),
-	(6, 1, '菜单管理', '菜单管理', '/admin/menus', '菜单管理', 1, '', NULL, NULL),
+	(1, 0, '权限模块', '权限模块', '/admin', '权限模块', 1, '', '2016-07-29 07:17:35', '2016-07-29 07:17:35'),
+	(4, 1, '管理员管理', '管理员管理', '/admin/admins', '管理员管理', 1, '', '2016-08-12 09:37:42', '2016-08-12 09:37:44'),
+	(5, 4, '管理员添加', '管理员管理-添加', '/admin/admins/create', '管理员添加', 0, '', '2016-08-12 09:37:45', '2016-08-12 09:37:46'),
+	(6, 1, '菜单管理', '菜单管理', '/admin/menus', '菜单管理', 1, '', '2016-08-12 09:37:46', '2016-08-12 09:37:47'),
 	(17, 1, '权限组管理', '权限组管理', '/admin/roles', '权限组管理', 1, '', '2016-07-29 07:17:35', '2016-07-29 07:17:35'),
-	(18, 0, '商品管理', '商品模块', '#', '商品模块', 1, '', '2016-08-02 04:16:00', '2016-08-02 04:16:00'),
+	(18, 0, '商品管理', '商品模块', '/product', '商品模块', 1, '', '2016-08-02 04:16:00', '2016-08-02 04:16:00'),
 	(19, 18, '商品列表', '商品列表', '/product/products', '商品列表', 1, '', '2016-08-02 04:26:34', '2016-08-02 04:26:34'),
-	(20, 18, '商品分类', '商品分类', '/product/category', '商品分类', 1, '2', '2016-08-02 06:37:23', '2016-08-02 06:37:23'),
+	(20, 18, '商品类型', '商品类型', '/product/category', '商品分类', 1, '2', '2016-08-02 06:37:23', '2016-08-02 06:37:23'),
 	(21, 18, '供应商列表', '供应商列表', '/product/supplier', '供应商列表', 1, '3', '2016-08-02 07:50:38', '2016-08-02 07:50:38'),
 	(22, 18, '品牌管理', '品牌管理', '/product/brand', '品牌管理', 1, '4', '2016-08-02 09:40:43', '2016-08-02 09:40:43'),
-	(23, 18, '属性管理', '属性管理', '/product/attr', '属性管理', 1, '4', '2016-08-03 06:48:28', '2016-08-03 06:48:28'),
+	(23, 18, '属性管理', '属性管理', '/product/property', '属性管理', 1, '4', '2016-08-03 06:48:28', '2016-08-03 06:48:28'),
 	(24, 18, '属性组管理', '属性组管理', '/product/attr_group', '属性组管理', 1, '4', '2016-08-09 01:32:37', '2016-08-09 01:32:37'),
 	(25, 18, '选项组管理', '选项组管理', '/product/option_group', '选项组管理', 1, '6', '2016-08-09 01:33:27', '2016-08-09 01:33:27');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
@@ -365,13 +362,17 @@ CREATE TABLE IF NOT EXISTS `product` (
   `public_attr` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.product 的数据：~1 rows (大约)
+-- 正在导出表  laravel_test.product 的数据：~4 rows (大约)
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` (`id`, `supplier_id`, `brand_id`, `category_id`, `name`, `details`, `description`, `seo_keywords`, `seo_description`, `label`, `public_attr`, `created_at`, `updated_at`) VALUES
-	(8, 3, 1, 2, '测试商品', '<p>&lt;p&gt;&lt;p&gt;测试商品&lt;/p&gt;&lt;/p&gt;</p>', '测试商品123', '测试商品', '测试商品', '测试商品', '{"model":"\\u578b\\u53f71","color":{"5":"\\u9ec4\\u8272"}}', '2016-08-11 02:12:45', '2016-08-11 02:56:50');
+INSERT INTO `product` (`id`, `supplier_id`, `brand_id`, `category_id`, `name`, `details`, `description`, `seo_keywords`, `seo_description`, `label`, `public_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(1, 3, 1, 2, '12323', '<p>123123</p>', '123123', '123133', '123123', '123123', '[]', '2016-08-12 02:05:48', '2016-08-12 03:15:19', '2016-08-12 03:15:19'),
+	(2, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123123', '123123', '123133', '[]', '2016-08-12 02:10:47', '2016-08-12 02:55:34', NULL),
+	(3, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123132', '123123', '132123', '[]', '2016-08-12 02:20:40', '2016-08-12 02:37:27', NULL),
+	(4, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123123', '123123', '123123', '{"model":"123123","color":{"4":"\\u7ea2\\u8272"}}', '2016-08-12 10:26:44', '2016-08-12 10:26:44', NULL);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 
 
@@ -389,24 +390,16 @@ CREATE TABLE IF NOT EXISTS `product_sub` (
   `private_attr` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.product_sub 的数据：~12 rows (大约)
+-- 正在导出表  laravel_test.product_sub 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `product_sub` DISABLE KEYS */;
-INSERT INTO `product_sub` (`id`, `product_id`, `productNo`, `price`, `sale_price`, `image`, `review`, `is_show`, `sort_order`, `private_attr`, `created_at`, `updated_at`) VALUES
-	(12, 8, '123123', 123123.00, 123123.00, 'login-bg.jpg', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(13, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"11":"\\u6d4b\\u8bd5\\u9009\\u98793-2"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(14, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"12":"\\u6d4b\\u8bd5\\u9009\\u98793-3"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(15, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(16, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"11":"\\u6d4b\\u8bd5\\u9009\\u98793-2"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(17, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"12":"\\u6d4b\\u8bd5\\u9009\\u98793-3"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(18, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(19, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"11":"\\u6d4b\\u8bd5\\u9009\\u98793-2"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(20, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"12":"\\u6d4b\\u8bd5\\u9009\\u98793-3"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(21, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(22, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"11":"\\u6d4b\\u8bd5\\u9009\\u98793-2"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54'),
-	(23, 8, '123123', 123123.00, 123123.00, '', 1, 1, '123123', '{"check_box":{"7":"\\u591a\\u90092"},"option_test":{"9":"\\u6d4b\\u8bd5\\u9009\\u98792-2"},"option_tests":{"12":"\\u6d4b\\u8bd5\\u9009\\u98793-3"}}', '2016-08-11 07:41:54', '2016-08-11 07:41:54');
+INSERT INTO `product_sub` (`id`, `product_id`, `productNo`, `price`, `sale_price`, `image`, `review`, `is_show`, `sort_order`, `private_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(1, 2, '13123', 123132.00, 123123.00, '0', 1, 1, '123123', '', '2016-08-12 07:11:24', '2016-08-12 07:40:48', '2016-08-12 07:40:48'),
+	(2, 2, '13123', 123123.00, 12313.00, '0', 1, 1, '123123', '', '2016-08-12 07:13:21', '2016-08-12 07:41:14', '2016-08-12 07:41:14'),
+	(3, 2, '13123', 123123.00, 12313.00, 'avatar-mini.jpg', 1, 1, '123123', '', '2016-08-12 07:13:33', '2016-08-12 09:19:27', '2016-08-12 09:19:27');
 /*!40000 ALTER TABLE `product_sub` ENABLE KEYS */;
 
 
