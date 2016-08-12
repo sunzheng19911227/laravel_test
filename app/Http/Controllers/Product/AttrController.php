@@ -67,9 +67,11 @@ class AttrController extends AdminBaseController
 
     // 删除
     public function destroy($id){
-    	$result = Attr::destroy($id);
+    	$attr = Attr::findOrFail($id);
+        
+        $attr->delete();
 
-    	if($result){
+    	if($attr->trashed()){
     		return redirect('/product/attr')->withSuccess('删除成功!');
     	} else {
     		return redirect('/product/attr')->withWarning('删除失败!');

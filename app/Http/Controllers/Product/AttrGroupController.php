@@ -56,7 +56,7 @@ class AttrGroupController extends AdminBaseController
     	$attr_group = AttrGroup::findOrFail($id);
     	$this->data['data'] = $attr_group->toArray();
     	foreach($attr_group->category as $g){
-    		$this->data['attr_group'] = $g->toArray();
+    		  $this->data['attr_group'] = $g->toArray();
     	}
     	return view('product.attr_group.edit', $this->data);
     }
