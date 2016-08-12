@@ -16,12 +16,14 @@ use App\Http\Controllers\FormController;
 
 class ProductController extends AdminBaseController
 {
-    //
     private $data;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+        //  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        // 获取当前路由
+        $this->data['route_path'] = $request->path();  
         // 供应商列表
         $supplier_lists = Supplier::all()->toArray();
         $this->data['supplier_lists'] = $supplier_lists;
@@ -33,16 +35,25 @@ class ProductController extends AdminBaseController
         $this->data['category_lists'] = $category_lists;
 
         // 注册删除事件--删除主商品时删除全部子商品
-        Product::deleting(function($product){
-        	$result = $product->ProductSub()->delete();
-        	if($result === false){
-        		return false;
-        	}
-        });
+        // Product::deleting(function($product){
+        // 	$result = $product->ProductSub()->delete();
+        // 	if($result === false){
+        // 		return false;
+        // 	}
+        // });
     }
 
     public function index() {
     	$this->data['lists'] = Product::all();
+        //var_dump($this->data['lists']);
+        //$product = Product::withTrashed()->find(1);
+        // //$product = Product::find(2);
+        // var_Dump($product->trashed());
+        // exit;
+        // //var_dump($product);
+        // // $ProductSub= ProductSub::findOrFail(2);
+        // // var_dump($ProductSub->Product()->restore());
+        // exit;
     	return view('product.product.list', $this->data);
     }
 
@@ -155,9 +166,10 @@ class ProductController extends AdminBaseController
     }
 
     public function destroy($id){
-    	$result = Product::destroy($id);
+    	$product = Product::findOrFail($id);
+        $product->delete();
 
-    	if($result){
+    	if($product->trashed()){
     		return redirect('/product/products')->withSuccess('删除成功!');
     	} else {
     		return redirect('/product/products')->withWarning('删除失败!');
@@ -181,7 +193,7 @@ class ProductController extends AdminBaseController
                     $default_value_data[$key] = $attr;
                 }
             }
-            var_dump($default_value_data);
+            //var_dump($default_value_data);
         }
 
         // 根据category_id获取属性和属性值
