@@ -12,9 +12,12 @@ class IndexController extends AdminBaseController
 {
 	private $data;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+        //  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        // 获取当前路由
+        $this->data['route_path'] = $request->path();
     }
 
     public function index()

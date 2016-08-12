@@ -14,10 +14,12 @@ class MenuController extends AdminBaseController
 {
     private $data;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-    	// 后台左侧菜单
+    	//  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        // 获取当前路由
+        $this->data['route_path'] = $request->path();
         //  获取二级数据
         $this->data['lists'] = Permission::with('chindren')->where('pid', '=', '0')->get()->toArray();
     }

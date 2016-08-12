@@ -33,17 +33,17 @@
         </div>
         <!--sidebar nav start-->
         <ul class="nav nav-pills nav-stacked custom-nav">
-            <li class="menu-list nav-active"><a href="#"><i class="fa fa-home"></i> <span>后台管理</span></a>
+            <li class="menu-list"><a href="#"><i class="fa fa-home"></i> <span>后台管理</span></a>
                 <ul class="sub-menu-list">
                     <li><a href="{{ url('admin') }}">首页</a></li>
                 </ul>
             </li>
             @foreach($menus as $menu)
-            <li class="menu-list"><a href="#"><i class="fa"></i> <span>{{ $menu['label'] }}</span></a>
+            <li class="menu-list {{ strstr('/'.$route_path, $menu['route']) !== false ? 'nav-active':'' }}"><a href="#"><i class="fa"></i> <span>{{ $menu['label'] }}</span></a>
                 @if(isset($menu['menus']))
                 <ul class="sub-menu-list">
                     @foreach($menu['menus'] as $m)
-                    <li><a href="{{ $m['route'] }}">{{ $m['label'] }}</a></li>
+                    <li {{ strstr('/'.$route_path, $m['route']) !== false ? 'class=active':'' }}><a href="{{ $m['route'] }}">{{ $m['label'] }}</a></li>
                     @endforeach
                 </ul>
                 @endif

@@ -10,7 +10,7 @@ use Gate;
 class AdminBaseController extends Controller
 {
 
-	public function __construct(){
+	public function __construct() {
 		$this->middleware('auth');
 	}
 

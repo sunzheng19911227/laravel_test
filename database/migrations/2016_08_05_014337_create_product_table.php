@@ -14,16 +14,16 @@ class CreateProductTable extends Migration
     {
         Schema::create('product', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('supplier_id')->index();
-            $table->integer('brand_id')->index();
-            $table->integer('category_id')->index();
-            $table->string('name')->index();
-            $table->text('details')->default('');
-            $table->string('description')->default('');
-            $table->string('seo_keywords')->default('');
-            $table->string('seo_description')->default('');
-            $table->string('label')->default('');
-            $table->text('public_attr')->default('');
+            $table->integer('supplier_id')->index()->change();
+            $table->integer('brand_id')->index()->change();
+            $table->integer('category_id')->index()->change();
+            $table->string('name')->index()->change();
+            $table->text('details')->default('')->change();
+            $table->string('description')->default('')->change();
+            $table->string('seo_keywords')->default('')->change();
+            $table->string('seo_description')->default('')->change();
+            $table->string('label')->default('')->change();
+            $table->text('public_attr')->default('')->change();
             $table->timestamps();
             $table->softDeletes();   // 软删除字段
         });
@@ -31,9 +31,9 @@ class CreateProductTable extends Migration
         Schema::create('product_sub', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id');
-            $table->string('productNo')->uniqid();
-            $table->decimal('price', 10, 2)->default('0.00');
-            $table->decimal('sale_price', 10, 2)->default('0.00');
+            $table->string('productNo')->uniqid()->change();
+            $table->decimal('price', 10, 2)->default('0.00')->change();
+            $table->decimal('sale_price', 10, 2)->default('0.00')->change();
             $table->string('image');
             $table->tinyInteger('review');
             $table->tinyInteger('is_show');

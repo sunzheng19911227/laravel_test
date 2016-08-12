@@ -14,9 +14,12 @@ class AttrValueController extends AdminBaseController
     
     private $data;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+        //  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        // 获取当前路由
+        $this->data['route_path'] = $request->path();
 
         //  获取属性组信息
         $attr = Attr::all();

@@ -44,7 +44,7 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 	Route::resource('/category', 'CategoryController');
 	Route::resource('/supplier', 'SupplierController');
 	Route::resource('/brand', 'BrandController');
-	Route::resource('/attr', 'AttrController');
+	Route::resource('/property', 'AttrController');
 
 	Route::get('/attr_value/create_value/{id}', 'AttrValueController@create_value');
 	Route::resource('/attr_value', 'AttrValueController');
