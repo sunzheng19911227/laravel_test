@@ -85,9 +85,10 @@ class CategoryController extends AdminBaseController
 
     // 删除
     public function destroy($id){
-    	$result = Category::destroy($id);
+    	$category = Category::findOrFail($id);
+        $category->delete();
 
-    	if($result){
+    	if($category->trashed()){
     		return redirect('/product/category')->withSuccess('删除成功!');
     	} else {
     		return redirect('/product/category')->withWarning('删除失败!');

@@ -126,7 +126,12 @@
                                         <tr>
                                             <th>id</th>
                                             <th>商品编号</th>
+                                            <th>价格</th>
+                                            <th>推荐价格</th>
+                                            <th>审核状态</th>
                                             <th>上架</th>
+                                            <th>添加时间</th>
+                                            <th>排序</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
@@ -136,7 +141,12 @@
                                         <tr class="">
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['productNo'] }}</td>
+                                            <td>{{ $list['price'] }}</td>
+                                            <td>{{ $list['sale_price'] }}</td>
+                                            <td>{{ $list['review'] }}</td>
                                             <td class="center">{{ $list['is_show'] }}</td>
+                                            <td>{{ $list['created_at'] }}</td>
+                                            <td>{{ $list['sort_order'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>

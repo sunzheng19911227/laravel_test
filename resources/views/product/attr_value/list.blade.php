@@ -128,7 +128,7 @@
                                             <th>属性名称</th>
                                             <th>属性值</th>
                                             <th>Status</th>
-                                            <th>Edit</th>
+                                            <!--<th>Edit</th>-->
                                             <th>Delete</th>
                                         </tr>
                                     </thead>
@@ -139,7 +139,7 @@
                                             <td>{{ $attr->name }}</td>
                                             <td>{{ $data['name'] }}</td>
                                             <td class="center">{{ $data['status'] }}</td>
-                                            <td><a href="{{ url('/product/attr_value/'.$data['id'].'/edit') }}">Edit</a></td>
+                                            <!--<td><a href="{{ url('/product/attr_value/'.$data['id'].'/edit') }}">Edit</a></td>-->
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $data['id']}} );">Delete</a></td>
                                         </tr>
                                         @endforeach

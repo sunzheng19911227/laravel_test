@@ -73,7 +73,7 @@
                             属性编辑
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr/'.$data['id']) }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/property/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
@@ -85,6 +85,15 @@
                                         <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name']:old('name') }}">
                                         @if ($errors->has('name'))
                                         <p class="help-block">{{ $errors->first('name') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('input_name') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">表单名称</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="input_name" name="input_name" class="form-control" value="{{ isset($data['input_name']) ? $data['input_name']:old('input_name') }}">
+                                        @if ($errors->has('input_name'))
+                                        <p class="help-block">{{ $errors->first('input_name') }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -156,7 +165,7 @@
                                             checked="checked" 
                                             @endif
                                             value="1"> 
-                                            显示
+                                            启用
                                         </label>
                                         <label class="radio-inline">
                                             <input type="radio" name="status"
@@ -164,7 +173,7 @@
                                             checked="checked" 
                                             @endif
                                             value="0"> 
-                                            隐藏
+                                            停用
                                         </label>
                                     </div>
                                 </div>

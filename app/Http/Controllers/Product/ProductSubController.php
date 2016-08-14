@@ -34,7 +34,7 @@ class ProductSubController extends AdminBaseController
 		$this->data['product'] = $product->toArray();
 		// 子商品信息
 		$pro = $product->ProductSub;
-		$this->data['product_sub'] = $pro;
+		$this->data['product_sub'] = $pro->toArray();
 		return view('product.product.show', $this->data);
 	}
 
@@ -92,6 +92,7 @@ class ProductSubController extends AdminBaseController
 				$options[substr($field, 7)] = $value;
 			}
 		}
+
 		//  上传文件
 		$filename = '';
 		if( $request->hasFile('file') ) {       
@@ -189,6 +190,8 @@ class ProductSubController extends AdminBaseController
 	public function ajax_create_form(Request $request) {
 		$form_data = array();
 		$default_value_data = array();
+        // 获取表单的类型
+        $form_type = $request->input('form_type');
 		// 获取商品的category_id
 		$product = Product::findOrFail($request->input('product_id'));
 		$category_id = $product->category_id;
@@ -209,12 +212,37 @@ class ProductSubController extends AdminBaseController
 		}
 
 		// 根据category_id获取选项和选项属性值
+        $disable = array();
 		$category = Category::findOrFail($category_id);
 		$option_groups = $category->option_group->toArray();
 		foreach($option_groups as $group) {
+		  
+            if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+                if($group['status'] == 0){
+                    continue;
+                }
+            } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+                if($group['status'] == 0){
+                    $option_group = OptionGroup::findOrFail($group['id']);
+                    $attrs = $option_group->attr->toArray();
+                    foreach($attrs as $attr) {
+                        $disable[] = $attr['input_name'];
+                    }
+                }
+            }
 			$option_group = OptionGroup::findOrFail($group['id']);
 			$attrs = $option_group->attr->toArray();
 			foreach($attrs as $attr) {
+                if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+                    if($attr['status'] == 0){
+                        continue;
+                    }
+                } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+                    if($attr['status'] == 0){
+                        $disable[] = $attr['input_name'];
+                    }
+                }
+             
 				$array = array();
 				$attr_value = Attr::findOrFail($attr['id'])->AttrValue->toArray();
 				foreach($attr_value as $a) {
@@ -245,10 +273,14 @@ class ProductSubController extends AdminBaseController
 						$is_disabled = true;
 					}
 				}
+                $disable_value = false;
+                if(in_array( (substr($data['input_name'], 7)), $disable)) {
+                    $disable_value = true;
+                }
 				if($data['input_box_type'] == '1') {
-					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value);
+					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value,false, $disable_value);
 				} else {
-					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item'], $default_value, $is_disabled);
+					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item'], $default_value, $is_disabled, $disable_value);
 				}
 			}
 		}

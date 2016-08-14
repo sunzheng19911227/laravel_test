@@ -35,25 +35,16 @@ class ProductController extends AdminBaseController
         $this->data['category_lists'] = $category_lists;
 
         // 注册删除事件--删除主商品时删除全部子商品
-        // Product::deleting(function($product){
-        // 	$result = $product->ProductSub()->delete();
-        // 	if($result === false){
-        // 		return false;
-        // 	}
-        // });
+         Product::deleting(function($product){
+            // 删除子商品
+         	if(!$product->ProductSub()->delete()){
+         		return false;
+         	}
+         });
     }
 
     public function index() {
     	$this->data['lists'] = Product::all();
-        //var_dump($this->data['lists']);
-        //$product = Product::withTrashed()->find(1);
-        // //$product = Product::find(2);
-        // var_Dump($product->trashed());
-        // exit;
-        // //var_dump($product);
-        // // $ProductSub= ProductSub::findOrFail(2);
-        // // var_dump($ProductSub->Product()->restore());
-        // exit;
     	return view('product.product.list', $this->data);
     }
 
@@ -62,8 +53,6 @@ class ProductController extends AdminBaseController
     }
 
     public function store(Request $request) {
-        //var_dump($request->except('_token'));
-        //exit;
     	$product = new Product;
     	$product->supplier_id = $request->input('supplier_id');
     	$product->brand_id = $request->input('brand_id');
@@ -105,7 +94,7 @@ class ProductController extends AdminBaseController
     	$result = $product->save();
 
     	if($result) {
-    		return redirect('/product/products')->withSuccess('添加成功!');
+    	   return redirect('/product/product_sub/create/'.$product->id);
     	} else {
     		return redirect('/product/products')->withWarning('添加失败!');
     	}
@@ -180,6 +169,8 @@ class ProductController extends AdminBaseController
     public function ajax_create_form(Request $request) {
         $form_data = array();
         $default_value_data = array();
+        // 获取表单的类型
+        $form_type = $request->input('form_type');
         // 获取商品属性信息
         if($request->input('product_id') !== null){
             $product = Product::findOrFail($request->input('product_id'))->toArray();
@@ -197,12 +188,38 @@ class ProductController extends AdminBaseController
         }
 
         // 根据category_id获取属性和属性值
+        $disable = array();
         $category = Category::findOrFail($request->input('category_id'));
         $attr_groups = $category->attr_group->toArray();
         foreach($attr_groups as $group) {
+            
+            if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+                if($group['status'] == 0){
+                    continue;
+                }
+            } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+                if($group['status'] == 0){
+                    $attr_group = AttrGroup::findOrFail($group['id']);
+                    $attrs = $attr_group->attr->toArray();
+                    foreach($attrs as $attr) {
+                        $disable[] = $attr['input_name'];
+                    }
+                }
+            }
+            
             $attr_group = AttrGroup::findOrFail($group['id']);
             $attrs = $attr_group->attr->toArray();
             foreach($attrs as $attr) {
+                if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+                    if($attr['status'] == 0){
+                        continue;
+                    }
+                } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+                    if($attr['status'] == 0){
+                        $disable[] = $attr['input_name'];
+                    }
+                }
+                
                 $array = array();
                 $attr_value = Attr::findOrFail($attr['id'])->AttrValue->toArray();
                 foreach($attr_value as $a) {
@@ -215,7 +232,6 @@ class ProductController extends AdminBaseController
                 $form_data[] = $array;
             }
         }
-
         $html = '';
         if(!empty($form_data)) {
             $form = new FormController;
@@ -231,9 +247,12 @@ class ProductController extends AdminBaseController
                          $default_value = $value;
                     }
                 }
-                var_dump($default_value);
+                $disable_value = false;
+                if(in_array( (substr($data['input_name'], 5)), $disable)) {
+                    $disable_value = true;
+                }
                 if($data['input_box_type'] == '1') {
-                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value);
+                    $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value, false, $disable_value);
                 } else {
                     $html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item'], $default_value);
                 }

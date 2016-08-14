@@ -86,7 +86,7 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
-                                        <a href="{{ url('/product/attr/create') }}"><button id="add—admin" class="btn btn-primary">
+                                        <a href="{{ url('/product/property/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加属性 <i class="fa fa-plus"></i>
                                         </button></a>
                                     </div>
@@ -134,7 +134,7 @@
                                             <th>Status</th>
                                             <th>查看属性值</th>
                                             <th>Edit</th>
-                                            <th>Delete</th>
+                                            <!--<th>Delete</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -144,8 +144,8 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/attr_value/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/attr/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            <td><a href="{{ url('/product/property/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            <!--<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>-->
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -224,7 +224,7 @@
     });
     
     function setDeleteFromAction(id){
-        $("#delete-form").attr("action", "/product/attr/"+id);
+        $("#delete-form").attr("action", "/product/property/"+id);
     }
 </script>
 

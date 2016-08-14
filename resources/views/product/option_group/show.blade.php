@@ -125,14 +125,14 @@
                                     <thead>
                                         <tr>
                                             <th>属性名称</th>
-                                            <th>Delete</th>
+                                            <!--<th>Delete</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($lists as $list)
                                         <tr class="">
                                             <td>{{ $list['name'] }}</td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}},{{ $option_group['id'] }} );">Delete</a></td>
+                                            <!--<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}},{{ $option_group['id'] }} );">Delete</a></td>-->
                                         </tr>
                                         @endforeach
                                     </tbody>

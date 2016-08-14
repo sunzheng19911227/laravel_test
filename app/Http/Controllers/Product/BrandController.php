@@ -64,9 +64,10 @@ class BrandController extends AdminBaseController
 
     // 删除
     public function destroy($id){
-    	$result = Brand::destroy($id);
-
-    	if($result){
+    	$brand = Brand::findOrFail($id);
+        $brand->delete();
+        
+    	if($brand->trashed()){
     		return redirect('/product/brand')->withSuccess('删除成功!');
     	} else {
     		return redirect('/product/brand')->withWarning('删除失败!');

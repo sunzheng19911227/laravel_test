@@ -126,7 +126,7 @@
                                         <tr>
                                             <th>id</th>
                                             <th>商品名称</th>
-                                            <th>Status</th>
+                                            <th>添加时间</th>
                                             <th>查看子商品</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
@@ -137,7 +137,7 @@
                                         <tr class="">
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['name'] }}</td>
-                                            <td class="center">{{ $list['status'] }}</td>
+                                            <td>{{ $list['created_at'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id']) }}">查看子商品</a></td>
                                             <td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>

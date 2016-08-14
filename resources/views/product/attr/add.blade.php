@@ -73,7 +73,7 @@
                             属性添加
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr') }}">
+                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/property') }}">
                                 {{ csrf_field() }}
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -82,6 +82,15 @@
                                         <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ old('name') }}">
                                         @if ($errors->has('name'))
                                         <p class="help-block">{{ $errors->first('name') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="form-group{{ $errors->has('input_name') ? ' has-error' : '' }}">
+                                    <label class="col-lg-2 control-label">表单名称</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" placeholder="" id="input_name" name="input_name" class="form-control" value="{{ old('input_name') }}">
+                                        @if ($errors->has('input_name'))
+                                        <p class="help-block">{{ $errors->first('input_name') }}</p>
                                         @endif
                                     </div>
                                 </div>
@@ -121,11 +130,11 @@
                                     <div class="col-md-7">
                                         <label class="radio-inline">
                                             <input type="radio" name="status" checked="checked" value="1"> 
-                                            显示
+                                            启用
                                         </label>
                                         <label class="radio-inline">
                                             <input type="radio" name="status" value="0"> 
-                                            隐藏
+                                            停用
                                         </label>
                                     </div>
                                 </div>

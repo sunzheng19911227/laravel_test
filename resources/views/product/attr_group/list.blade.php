@@ -129,7 +129,7 @@
                                             <th>Status</th>
                                             <th>查看属性</th>
                                             <th>Edit</th>
-                                            <th>Delete</th>
+                                            <!--<th>Delete</th>-->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -140,7 +140,7 @@
                                             <td class="center">{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/attr_group/'.$list['id']) }}">Show</a></td>
                                             <td><a href="{{ url('/product/attr_group/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            <!--<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>-->
                                         </tr>
                                         @endforeach
                                     </tbody>

@@ -9,21 +9,25 @@ use App\Http\Requests;
 class FormController extends Controller
 {
     // 生成文本框
-	public function create_text($label_name, $input_name, $default_value = '', $disabled = false) {
-		$str = <<<EOT
+	public function create_text($label_name, $input_name, $default_value = '', $disabled = false, $disabled_value = false) {
+        if($disabled_value) {
+            $disabled_value = '<p class="help-block" style="color:red">该属性已被禁用</p>';
+        }
+       
+		$str = '
 			<div class="form-group">
-					<label class="col-lg-2 control-label">{$label_name}</label>
+					<label class="col-lg-2 control-label">'.$label_name.'</label>
 					<div class="col-lg-10">
-						<input type="text" placeholder="" id="{$input_name}" name="{$input_name}" class="form-control" 
-							value="{$default_value}">
+						<input type="text" placeholder="" id="'.$input_name.'" name="'.$input_name.'" class="form-control" 
+							value="'.$default_value.'">
+                        '.$disabled_value.'
 					</div>
-				</div>
-EOT;
+				</div>';
 		return $str;
 	}
 
 	// 生成下拉框
-	public function create_select($label_name, $select_name, $select_item, $selected_id = array()) {
+	public function create_select($label_name, $select_name, $select_item, $selected_id = array(), $is_disabled = false, $disabled_value = false) {
 		$select_str = '<option>请选择</option>';
 		foreach($select_item as $key=>$item) {
 			$selected = '';
@@ -32,18 +36,27 @@ EOT;
 	    	}
 			$select_str .= '<option value="'.$key.'">'.$item.'</option>';
 		}
+        
+        if($disabled_value) {
+            $disabled_value = '<p class="help-block" style="color:red">该属性已被禁用</p>';
+        }
 
 		$str = '<div class="form-group">
 	                <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">'.$label_name.'</label>
 	                <div class="col-lg-10">
 	                    <select class="form-control m-bot15" name="'.$select_name.'">'.$select_str.'</select>
+                        '.$disabled_value.'
 	                </div>
 	            </div>';
 	    return $str;
 	}
 
 	// 生成单选框
-	public function create_radio($label_name, $radio_name, $radio_item, $checked_id = array()){
+	public function create_radio($label_name, $radio_name, $radio_item, $checked_id = array(), $is_disabled = false, $disabled_value = false){
+        if($disabled_value) {
+            $disabled_value = '<p class="help-block" style="color:red">该属性已被禁用</p>';
+        }
+        
 		$str = '<div class="form-group">
 	                <label class="col-lg-2 control-label">'.$label_name.'</label>
 	                <div class="col-md-7">';
@@ -56,13 +69,18 @@ EOT;
                         <input type="radio" name="'.$radio_name.'" value="'.$key.'" ' . $checked . '>'.$item.'
                     </label>';
 	    }
-	    $str.= '    </div>
+	    $str.= '    '.$disabled_value.'
+                    </div>
 	            </div>';
 	    return $str;
 	}
 
 	// 生成复选框
-	public function create_checkbox($label_name, $checkbox_name, $checkbox_item, $checked_id = array(), $is_disabled = false) {
+	public function create_checkbox($label_name, $checkbox_name, $checkbox_item, $checked_id = array(), $is_disabled = false,  $disabled_value = false) {
+	   if($disabled_value) {
+            $disabled_value = '<p class="help-block" style="color:red">该属性已被禁用</p>';
+        }
+       
 		$checkbox = '';
 		foreach($checkbox_item as $key=>$item){
 			$checked = '';
@@ -78,6 +96,7 @@ EOT;
 		$str = '<div>
 	                <label>'.$label_name.'</label>
 	                '.$checkbox.'
+                    '.$disabled_value.'
 	            </div>';
 	    return $str;
 	}

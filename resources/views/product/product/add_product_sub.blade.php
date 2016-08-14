@@ -218,7 +218,7 @@
        $.ajax({
             type: "post",
             url: "/product/product_sub/ajax_create_form",
-            data: {product_id : product_id},
+            data: {form_type : 'create', product_id : product_id},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
             },

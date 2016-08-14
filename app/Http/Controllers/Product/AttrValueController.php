@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use Illuminate\Http\Request;
 use App\Attr;
 use App\AttrValue;
+use App\ProductSub;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\TreeController;
@@ -24,6 +25,19 @@ class AttrValueController extends AdminBaseController
         //  获取属性组信息
         $attr = Attr::all();
         $this->data['lists'] = $attr;
+        
+        // 注册删除事件--删除属性值时停用相关商品
+        AttrValue::deleting(function($attr_value){
+            $keywords = '"'.$attr_value->id.'":"'.$attr_value->name.'"';
+            // 查找子商品选项中相关商品
+            $ProductSub = new ProductSub();
+            $product_subs = $ProductSub->where('private_attr','like','%'.$keywords.'%')->get();
+            foreach($product_subs as $product_sub){
+                $product = $ProductSub->find($product_sub->id);
+                $product->is_show = '0';
+                $product->save();
+            }
+        });
     }
 
     public function show($id){
@@ -56,9 +70,9 @@ class AttrValueController extends AdminBaseController
         $result = $attr->giveAttrValue($attr_value);
 
     	if($result){
-    		return redirect('/product/attr')->withSuccess('添加成功!');
+    		return redirect('/product/property')->withSuccess('添加成功!');
     	} else {
-    		return redirect('/product/attr')->withWarning('添加失败!');
+    		return redirect('/product/property')->withWarning('添加失败!');
     	}
     }
 
@@ -76,20 +90,22 @@ class AttrValueController extends AdminBaseController
         $result = $attr_value->save();
 
         if($result){
-            return redirect('/product/attr')->withSuccess('编辑成功!');
+            return redirect('/product/property')->withSuccess('编辑成功!');
         } else {
-            return redirect('/product/attr')->withWarning('编辑失败!');
+            return redirect('/product/property')->withWarning('编辑失败!');
         }
     }
 
     // 删除
     public function destroy($id){
-        $result = AttrValue::destroy($id);
+        $attr_value = AttrValue::findOrFail($id);
+        
+        $attr_value->delete();
 
-        if($result){
-            return redirect('/product/attr')->withSuccess('删除成功!');
+        if($attr_value->trashed()){
+            return redirect('/product/property')->withSuccess('删除成功!');
         } else {
-            return redirect('/product/attr')->withWarning('删除失败!');
+            return redirect('/product/property')->withWarning('删除失败!');
         }
     }
 }

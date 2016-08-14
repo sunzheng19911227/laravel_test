@@ -31,6 +31,7 @@ class AttrController extends AdminBaseController
     public function store(Request $request){
     	$attr = new Attr();
     	$attr->name = $request->input('name');
+        $attr->input_name = $request->input('input_name');
     	$attr->input_box_type = $request->input('input_box_type');
     	$attr->input_value_type = $request->input('input_value_type');
     	$attr->status = $request->input('status');
@@ -38,9 +39,9 @@ class AttrController extends AdminBaseController
     	$result = $attr->save();
 
     	if($result){
-    		return redirect('/product/attr')->withSuccess('添加成功!');
+    		return redirect('/product/property')->withSuccess('添加成功!');
     	} else {
-    		return redirect('/product/attr')->withWarning('添加失败!');
+    		return redirect('/product/property')->withWarning('添加失败!');
     	}
     }
 
@@ -52,6 +53,7 @@ class AttrController extends AdminBaseController
     public function update(Request $request, $id){
     	$attr = Attr::findOrFail($id);
     	$attr->name = $request->input('name');
+        $attr->input_name = $request->input('input_name');
     	$attr->input_box_type = $request->input('input_box_type');
     	$attr->input_value_type = $request->input('input_value_type');
     	$attr->status = $request->input('status');
@@ -59,9 +61,9 @@ class AttrController extends AdminBaseController
     	$result = $attr->save();
 
     	if($result){
-    		return redirect('/product/attr')->withSuccess('编辑成功!');
+    		return redirect('/product/property')->withSuccess('编辑成功!');
     	} else {
-    		return redirect('/product/attr')->withWarning('编辑失败!');
+    		return redirect('/product/property')->withWarning('编辑失败!');
     	}
     }
 
@@ -72,9 +74,9 @@ class AttrController extends AdminBaseController
         $attr->delete();
 
     	if($attr->trashed()){
-    		return redirect('/product/attr')->withSuccess('删除成功!');
+    		return redirect('/product/property')->withSuccess('删除成功!');
     	} else {
-    		return redirect('/product/attr')->withWarning('删除失败!');
+    		return redirect('/product/property')->withWarning('删除失败!');
     	}
     }
 }

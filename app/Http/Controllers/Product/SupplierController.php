@@ -68,9 +68,10 @@ class SupplierController extends AdminBaseController
 
     // 删除
     public function destroy($id){
-    	$result = Supplier::destroy($id);
-
-    	if($result){
+    	$supplier = Supplier::findOrFail($id);
+        $supplier->delete();
+        
+    	if($supplier->trashed()){
     		return redirect('/product/supplier')->withSuccess('删除成功!');
     	} else {
     		return redirect('/product/supplier')->withWarning('删除失败!');
