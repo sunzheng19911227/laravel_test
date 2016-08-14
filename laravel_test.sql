@@ -2,11 +2,11 @@
 -- 主机:                           127.0.0.1
 -- 服务器版本:                        5.6.17 - MySQL Community Server (GPL)
 -- 服务器操作系统:                      Win64
--- HeidiSQL 版本:                  9.3.0.4984
+-- HeidiSQL 版本:                  8.3.0.4694
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
@@ -28,16 +28,18 @@ CREATE TABLE IF NOT EXISTS `attr` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.attr 的数据：~5 rows (大约)
+-- 正在导出表  laravel_test.attr 的数据：~7 rows (大约)
 /*!40000 ALTER TABLE `attr` DISABLE KEYS */;
 INSERT INTO `attr` (`id`, `name`, `input_name`, `input_box_type`, `input_value_type`, `status`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
 	(2, '型号', 'model', 1, 1, 1, 0, '2016-08-04 07:24:40', '2016-08-04 07:24:40', NULL),
 	(3, '颜色', 'color', 3, 1, 1, 1, '2016-08-10 10:02:37', '2016-08-10 10:02:37', NULL),
 	(4, '多选框test', 'check_box', 2, 1, 1, 1, '2016-08-10 10:11:16', '2016-08-10 10:11:16', NULL),
 	(5, '选项测试2', 'option_test', 2, 1, 1, 1, '2016-08-11 03:32:39', '2016-08-11 03:32:39', NULL),
-	(6, '选项测试3', 'option_tests', 2, 1, 1, 1, '2016-08-11 04:12:35', '2016-08-11 04:12:35', NULL);
+	(6, '选项测试3', 'option_tests', 2, 1, 1, 1, '2016-08-11 04:12:35', '2016-08-11 04:12:35', NULL),
+	(9, '属性组关联属性停用测试', 'attr_test', 1, 1, 0, 1, '2016-08-14 07:03:29', '2016-08-14 12:25:38', NULL),
+	(10, '选项组测试选项停用', 'option_test123', 2, 1, 0, 1, '2016-08-14 08:01:55', '2016-08-14 12:20:53', NULL);
 /*!40000 ALTER TABLE `attr` ENABLE KEYS */;
 
 
@@ -51,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `attr_attr_value` (
   CONSTRAINT `attr_attr_value_attr_value_id_foreign` FOREIGN KEY (`attr_value_id`) REFERENCES `attr_value` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.attr_attr_value 的数据：~11 rows (大约)
+-- 正在导出表  laravel_test.attr_attr_value 的数据：~13 rows (大约)
 /*!40000 ALTER TABLE `attr_attr_value` DISABLE KEYS */;
 INSERT INTO `attr_attr_value` (`attr_id`, `attr_value_id`) VALUES
 	(2, 2),
@@ -64,7 +66,9 @@ INSERT INTO `attr_attr_value` (`attr_id`, `attr_value_id`) VALUES
 	(5, 9),
 	(6, 10),
 	(6, 11),
-	(6, 12);
+	(6, 12),
+	(10, 13),
+	(10, 14);
 /*!40000 ALTER TABLE `attr_attr_value` ENABLE KEYS */;
 
 
@@ -77,13 +81,14 @@ CREATE TABLE IF NOT EXISTS `attr_group` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.attr_group 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.attr_group 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `attr_group` DISABLE KEYS */;
 INSERT INTO `attr_group` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
 	(7, '123123123123', 1, '123123123', '2016-08-09 03:42:13', '2016-08-09 03:45:17'),
-	(8, '多选test', 1, '1', '2016-08-10 10:12:20', '2016-08-10 10:12:20');
+	(8, '多选test', 1, '1', '2016-08-10 10:12:20', '2016-08-10 10:12:20'),
+	(9, '测试属性组停用', 1, '1', '2016-08-14 06:53:52', '2016-08-14 12:25:28');
 /*!40000 ALTER TABLE `attr_group` ENABLE KEYS */;
 
 
@@ -97,12 +102,13 @@ CREATE TABLE IF NOT EXISTS `attr_group_attr` (
   CONSTRAINT `attr_group_attr_attr_id_foreign` FOREIGN KEY (`attr_id`) REFERENCES `attr` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.attr_group_attr 的数据：~3 rows (大约)
+-- 正在导出表  laravel_test.attr_group_attr 的数据：~4 rows (大约)
 /*!40000 ALTER TABLE `attr_group_attr` DISABLE KEYS */;
 INSERT INTO `attr_group_attr` (`attr_group_id`, `attr_id`) VALUES
 	(7, 2),
 	(7, 3),
-	(8, 4);
+	(8, 4),
+	(9, 9);
 /*!40000 ALTER TABLE `attr_group_attr` ENABLE KEYS */;
 
 
@@ -114,24 +120,27 @@ CREATE TABLE IF NOT EXISTS `attr_value` (
   `sort_order` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.attr_value 的数据：~12 rows (大约)
+-- 正在导出表  laravel_test.attr_value 的数据：~14 rows (大约)
 /*!40000 ALTER TABLE `attr_value` DISABLE KEYS */;
-INSERT INTO `attr_value` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
-	(1, '红色', 1, 1, '2016-08-04 12:47:27', '2016-08-04 12:47:28'),
-	(2, 'ios32123123', 1, 112, '2016-08-04 09:10:09', '2016-08-04 10:10:35'),
-	(3, 'ios64', 1, 2, '2016-08-10 07:17:58', '2016-08-10 07:17:58'),
-	(4, '红色', 1, 1, '2016-08-10 10:02:46', '2016-08-10 10:02:46'),
-	(5, '黄色', 1, 1, '2016-08-10 10:02:57', '2016-08-10 10:02:57'),
-	(6, '多选1', 1, 1, '2016-08-10 10:11:28', '2016-08-10 10:11:28'),
-	(7, '多选2', 1, 1, '2016-08-10 10:11:38', '2016-08-10 10:11:38'),
-	(8, '测试选项2-1', 1, 1, '2016-08-11 03:33:02', '2016-08-11 03:33:02'),
-	(9, '测试选项2-2', 1, 1, '2016-08-11 03:33:16', '2016-08-11 03:33:16'),
-	(10, '测试选项3-1', 1, 1, '2016-08-11 04:12:51', '2016-08-11 04:12:51'),
-	(11, '测试选项3-2', 1, 2, '2016-08-11 04:13:04', '2016-08-11 04:13:04'),
-	(12, '测试选项3-3', 1, 3, '2016-08-11 04:13:18', '2016-08-11 04:13:18');
+INSERT INTO `attr_value` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(1, '红色', 1, 1, '2016-08-04 12:47:27', '2016-08-04 12:47:28', NULL),
+	(2, 'ios32123123', 1, 112, '2016-08-04 09:10:09', '2016-08-04 10:10:35', NULL),
+	(3, 'ios64', 1, 2, '2016-08-10 07:17:58', '2016-08-10 07:17:58', NULL),
+	(4, '红色', 1, 1, '2016-08-10 10:02:46', '2016-08-10 10:02:46', NULL),
+	(5, '黄色', 1, 1, '2016-08-10 10:02:57', '2016-08-10 10:02:57', NULL),
+	(6, '多选1', 1, 1, '2016-08-10 10:11:28', '2016-08-10 10:11:28', NULL),
+	(7, '多选2', 1, 1, '2016-08-10 10:11:38', '2016-08-10 10:11:38', NULL),
+	(8, '测试选项2-1', 1, 1, '2016-08-11 03:33:02', '2016-08-11 03:33:02', NULL),
+	(9, '测试选项2-2', 1, 1, '2016-08-11 03:33:16', '2016-08-11 03:33:16', NULL),
+	(10, '测试选项3-1', 1, 1, '2016-08-11 04:12:51', '2016-08-11 04:12:51', NULL),
+	(11, '测试选项3-2', 1, 2, '2016-08-11 04:13:04', '2016-08-11 04:13:04', NULL),
+	(12, '测试选项3-3', 1, 3, '2016-08-11 04:13:18', '2016-08-11 04:13:18', NULL),
+	(13, 'test1', 1, 1, '2016-08-14 08:02:07', '2016-08-14 08:02:07', NULL),
+	(14, 'test2', 1, 2, '2016-08-14 08:04:06', '2016-08-14 08:04:06', NULL);
 /*!40000 ALTER TABLE `attr_value` ENABLE KEYS */;
 
 
@@ -143,13 +152,15 @@ CREATE TABLE IF NOT EXISTS `brand` (
   `sort_order` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 正在导出表  laravel_test.brand 的数据：~2 rows (大约)
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
-	(1, '小米1', 1, 1, '2016-08-03 02:17:38', '2016-08-03 02:18:01');
+INSERT INTO `brand` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(1, '小米1', 1, 1, '2016-08-03 02:17:38', '2016-08-03 02:18:01', NULL),
+	(3, '测试软删除', 1, 1, '2016-08-14 06:00:47', '2016-08-14 06:00:50', '2016-08-14 06:00:50');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 
 
@@ -161,14 +172,16 @@ CREATE TABLE IF NOT EXISTS `category` (
   `status` tinyint(4) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.category 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.category 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` (`id`, `pid`, `name`, `status`, `created_at`, `updated_at`) VALUES
-	(2, 0, '手机123', 1, '2016-08-03 06:14:15', '2016-08-03 06:34:43'),
-	(4, 0, '测试123', 1, '2016-08-09 03:34:33', '2016-08-09 03:34:33');
+INSERT INTO `category` (`id`, `pid`, `name`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(2, 0, '手机123', 1, '2016-08-03 06:14:15', '2016-08-03 06:34:43', NULL),
+	(4, 0, '测试123', 1, '2016-08-09 03:34:33', '2016-08-09 03:34:33', NULL),
+	(5, 0, '测试软删除', 1, '2016-08-14 05:56:21', '2016-08-14 05:56:31', '2016-08-14 05:56:31');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 
 
@@ -182,10 +195,12 @@ CREATE TABLE IF NOT EXISTS `category_attr_group` (
   CONSTRAINT `category_attr_group_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.category_attr_group 的数据：~1 rows (大约)
+-- 正在导出表  laravel_test.category_attr_group 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `category_attr_group` DISABLE KEYS */;
 INSERT INTO `category_attr_group` (`category_id`, `attr_group_id`) VALUES
-	(2, 7);
+	(2, 7),
+	(2, 8),
+	(2, 9);
 /*!40000 ALTER TABLE `category_attr_group` ENABLE KEYS */;
 
 
@@ -199,8 +214,12 @@ CREATE TABLE IF NOT EXISTS `category_option_group` (
   CONSTRAINT `category_option_group_option_group_id_foreign` FOREIGN KEY (`option_group_id`) REFERENCES `option_group` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.category_option_group 的数据：~0 rows (大约)
+-- 正在导出表  laravel_test.category_option_group 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `category_option_group` DISABLE KEYS */;
+INSERT INTO `category_option_group` (`category_id`, `option_group_id`) VALUES
+	(2, 2),
+	(2, 3),
+	(2, 4);
 /*!40000 ALTER TABLE `category_option_group` ENABLE KEYS */;
 
 
@@ -238,13 +257,14 @@ CREATE TABLE IF NOT EXISTS `option_group` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.option_group 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.option_group 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `option_group` DISABLE KEYS */;
 INSERT INTO `option_group` (`id`, `name`, `status`, `sort_order`, `created_at`, `updated_at`) VALUES
 	(2, '选项测试1', 1, '1', '2016-08-11 03:32:11', '2016-08-11 03:32:11'),
-	(3, '选项测试组2', 1, '1', '2016-08-11 04:12:15', '2016-08-11 04:12:15');
+	(3, '选项测试组2', 1, '1', '2016-08-11 04:12:15', '2016-08-11 04:12:15'),
+	(4, '选项组停用测试', 1, '1', '2016-08-14 08:05:48', '2016-08-14 12:20:45');
 /*!40000 ALTER TABLE `option_group` ENABLE KEYS */;
 
 
@@ -258,12 +278,13 @@ CREATE TABLE IF NOT EXISTS `option_group_attr` (
   CONSTRAINT `option_group_attr_option_group_id_foreign` FOREIGN KEY (`option_group_id`) REFERENCES `option_group` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.option_group_attr 的数据：~3 rows (大约)
+-- 正在导出表  laravel_test.option_group_attr 的数据：~4 rows (大约)
 /*!40000 ALTER TABLE `option_group_attr` DISABLE KEYS */;
 INSERT INTO `option_group_attr` (`option_group_id`, `attr_id`) VALUES
 	(2, 4),
 	(2, 5),
-	(3, 6);
+	(3, 6),
+	(4, 10);
 /*!40000 ALTER TABLE `option_group_attr` ENABLE KEYS */;
 
 
@@ -354,25 +375,31 @@ CREATE TABLE IF NOT EXISTS `product` (
   `brand_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `details` text COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `seo_keywords` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `seo_description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `label` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `details` text COLLATE utf8_unicode_ci,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `seo_keywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `seo_description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `label` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `public_attr` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.product 的数据：~4 rows (大约)
+-- 正在导出表  laravel_test.product 的数据：~9 rows (大约)
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 INSERT INTO `product` (`id`, `supplier_id`, `brand_id`, `category_id`, `name`, `details`, `description`, `seo_keywords`, `seo_description`, `label`, `public_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 3, 1, 2, '12323', '<p>123123</p>', '123123', '123133', '123123', '123123', '[]', '2016-08-12 02:05:48', '2016-08-12 03:15:19', '2016-08-12 03:15:19'),
-	(2, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123123', '123123', '123133', '[]', '2016-08-12 02:10:47', '2016-08-12 02:55:34', NULL),
-	(3, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123132', '123123', '132123', '[]', '2016-08-12 02:20:40', '2016-08-12 02:37:27', NULL),
-	(4, 3, 1, 2, '123123', '<p>123123</p>', '123123', '123123', '123123', '123123', '{"model":"123123","color":{"4":"\\u7ea2\\u8272"}}', '2016-08-12 10:26:44', '2016-08-12 10:26:44', NULL);
+	(1, 3, 1, 2, '2313', '<p>123123</p>', '12313', '2313', '123123', '12313', '{"model":"12312","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091","7":"\\u591a\\u90092"}}', '2016-08-14 07:12:36', '2016-08-14 07:12:36', NULL),
+	(2, 3, 1, 2, '123', '<p>123</p>', '123', '123', '123', '123', '{"model":"1132","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 07:50:41', '2016-08-14 07:50:41', NULL),
+	(3, 3, 1, 2, 'test1223123', '<p>123213</p>', '123123', '2313', '123123', '123123', '{"model":"123","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:48:32', '2016-08-14 12:48:32', NULL),
+	(4, 3, 1, 2, 'test1223123', '<p>123213</p>', '123123', '2313', '123123', '123123', '{"model":"123","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:49:39', '2016-08-14 12:49:39', NULL),
+	(5, 3, 1, 2, 'test1223123', '<p>123213</p>', '123123', '2313', '123123', '123123', '{"model":"123","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:51:12', '2016-08-14 12:51:12', NULL),
+	(6, 3, 1, 2, '23123', '<p>123123</p>', '123123', '23123', '123213', '123123', '{"model":"12321","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:51:39', '2016-08-14 12:51:39', NULL),
+	(7, 3, 1, 4, '123123', '<p>123123</p>', '12323', '123231', '231312', '231231', '[]', '2016-08-14 12:52:45', '2016-08-14 12:52:45', NULL),
+	(8, 3, 1, 4, '123123', '<p>12213</p>', '123123', '12313', '12', '3123213', '[]', '2016-08-14 12:54:16', '2016-08-14 12:54:16', NULL),
+	(9, 3, 1, 4, '123123', '<p>123213123</p>', '123123', '12313', '12', '3123213', '[]', '2016-08-14 12:54:50', '2016-08-14 12:54:50', NULL),
+	(10, 3, 1, 4, '123123', NULL, '', '', '', '', '[]', '2016-08-14 12:55:48', '2016-08-14 12:55:48', NULL);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 
 
@@ -392,14 +419,13 @@ CREATE TABLE IF NOT EXISTS `product_sub` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.product_sub 的数据：~3 rows (大约)
+-- 正在导出表  laravel_test.product_sub 的数据：~2 rows (大约)
 /*!40000 ALTER TABLE `product_sub` DISABLE KEYS */;
 INSERT INTO `product_sub` (`id`, `product_id`, `productNo`, `price`, `sale_price`, `image`, `review`, `is_show`, `sort_order`, `private_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 2, '13123', 123132.00, 123123.00, '0', 1, 1, '123123', '', '2016-08-12 07:11:24', '2016-08-12 07:40:48', '2016-08-12 07:40:48'),
-	(2, 2, '13123', 123123.00, 12313.00, '0', 1, 1, '123123', '', '2016-08-12 07:13:21', '2016-08-12 07:41:14', '2016-08-12 07:41:14'),
-	(3, 2, '13123', 123123.00, 12313.00, 'avatar-mini.jpg', 1, 1, '123123', '', '2016-08-12 07:13:33', '2016-08-12 09:19:27', '2016-08-12 09:19:27');
+	(6, 1, '123123', 123123.00, 12313.00, '', 1, 0, '123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"},"option_test123":{"13":"test1"}}', '2016-08-14 12:15:40', '2016-08-14 13:27:31', NULL),
+	(7, 1, '123123', 123123.00, 12313.00, '', 1, 1, '123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"},"option_test123":{"14":"test2"}}', '2016-08-14 12:15:40', '2016-08-14 13:14:57', '2016-08-14 13:14:57');
 /*!40000 ALTER TABLE `product_sub` ENABLE KEYS */;
 
 
@@ -432,7 +458,7 @@ CREATE TABLE IF NOT EXISTS `role_user` (
   CONSTRAINT `role_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.role_user 的数据：~2 rows (大约)
+-- 正在导出表  laravel_test.role_user 的数据：~0 rows (大约)
 /*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
 INSERT INTO `role_user` (`user_id`, `role_id`) VALUES
 	(4, 3);
@@ -447,13 +473,15 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.supplier 的数据：~0 rows (大约)
+-- 正在导出表  laravel_test.supplier 的数据：~2 rows (大约)
 /*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
-INSERT INTO `supplier` (`id`, `name`, `status`, `description`, `created_at`, `updated_at`) VALUES
-	(3, '爱康国宾', 1, '爱康国宾', '2016-08-02 09:34:55', '2016-08-02 09:35:06');
+INSERT INTO `supplier` (`id`, `name`, `status`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(3, '爱康国宾', 1, '爱康国宾', '2016-08-02 09:34:55', '2016-08-02 09:35:06', NULL),
+	(4, '测试软删除', 1, '测试软删除测试软删除测试软删除', '2016-08-14 06:04:00', '2016-08-14 06:04:04', '2016-08-14 06:04:04');
 /*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
 
 
@@ -471,7 +499,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.users 的数据：~5 rows (大约)
+-- 正在导出表  laravel_test.users 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `status`, `created_at`, `updated_at`) VALUES
 	(4, 'test', 'test@mall.com', '$2y$10$6UHFhxrHLlutS15KogGVVeGpOqrc0y30JvXtN8/i27IDkMnNcg30a', '0RvpnjABhZuM0KZAp94oPlm0CzgM4dDpHdcoTesmTgYYpfoGT3mUyO5smwLN', 1, '2016-07-27 05:10:54', '2016-07-28 07:20:38'),
