@@ -16,4 +16,14 @@ class Product extends Model
     public function ProductSub() {
     	return $this->hasMany(ProductSub::class);
     }
+
+    // 关联供应商
+    public function Supplier() {
+    	return $this->belongsTo(Supplier::class);
+    }
+
+    // 关联品牌
+    public function Brand() {
+    	return $this->belongsTo(Brand::class);
+    }
 }

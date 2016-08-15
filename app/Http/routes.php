@@ -19,6 +19,8 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 // 后台首页
 Route::get('/admin', 'Admin\IndexController@index');
+// TEST同步
+Route::get('/sync/sync_mall', 'SyncController@sync_mall');
 
 // 后台管理
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth'], function() {

@@ -65,6 +65,20 @@ return [
             'strict' => false,
             'engine' => null,
         ],
+        //  商城测试数据库
+        'mall' => [
+            'driver' => 'mysql',
+            'host' => '192.168.99.225',
+            'port' => '3306',
+            'database' => 'mallnew',
+            'username' => 'root',
+            'password' => '123456',
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => 'oc_',
+            'strict' => false,
+            'engine' => null,
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

@@ -25,6 +25,9 @@ class ProductSubController extends AdminBaseController
         $this->data['menus'] = $this->getMeunList();
         // 获取当前路由
         $this->data['route_path'] = $request->path();
+
+        //添加完之后同步到老系统
+        
 	}
 
 	//  查看子商品列表

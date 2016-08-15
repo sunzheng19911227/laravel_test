@@ -18,10 +18,13 @@ class Attr extends Model
     	return $this->belongsToMany(AttrValue::class);
     }
 
+    // 属性关联 -- 多对多
+    public function AttrGroup() {
+        return $this->belongsToMany(AttrGroup::class, 'attr_group_attr');
+    }
+
     public function giveAttrValue($AttrValue){
     	return $this->AttrValue()->save($AttrValue);
     }
-
-    //   添加软删除
     
 }
