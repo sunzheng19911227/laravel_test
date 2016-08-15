@@ -2,11 +2,11 @@
 -- 主机:                           127.0.0.1
 -- 服务器版本:                        5.6.17 - MySQL Community Server (GPL)
 -- 服务器操作系统:                      Win64
--- HeidiSQL 版本:                  8.3.0.4694
+-- HeidiSQL 版本:                  9.3.0.4984
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
@@ -387,10 +387,10 @@ CREATE TABLE IF NOT EXISTS `product` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- 正在导出表  laravel_test.product 的数据：~9 rows (大约)
+-- 正在导出表  laravel_test.product 的数据：~10 rows (大约)
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 INSERT INTO `product` (`id`, `supplier_id`, `brand_id`, `category_id`, `name`, `details`, `description`, `seo_keywords`, `seo_description`, `label`, `public_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 3, 1, 2, '2313', '<p>123123</p>', '12313', '2313', '123123', '12313', '{"model":"12312","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091","7":"\\u591a\\u90092"}}', '2016-08-14 07:12:36', '2016-08-14 07:12:36', NULL),
+	(1, 3, 1, 2, '2313', '<p>123123</p>', '12313', '2313', '123123', '12313', '{"model":"12312","color":{"4":"\\u7ea2\\u8272"}}', '2016-08-14 07:12:36', '2016-08-14 07:12:36', NULL),
 	(2, 3, 1, 2, '123', '<p>123</p>', '123', '123', '123', '123', '{"model":"1132","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 07:50:41', '2016-08-14 07:50:41', NULL),
 	(3, 3, 1, 2, 'test1223123', '<p>123213</p>', '123123', '2313', '123123', '123123', '{"model":"123","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:48:32', '2016-08-14 12:48:32', NULL),
 	(4, 3, 1, 2, 'test1223123', '<p>123213</p>', '123123', '2313', '123123', '123123', '{"model":"123","color":{"4":"\\u7ea2\\u8272"},"check_box":{"6":"\\u591a\\u90091"}}', '2016-08-14 12:49:39', '2016-08-14 12:49:39', NULL),
@@ -408,8 +408,8 @@ CREATE TABLE IF NOT EXISTS `product_sub` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
   `productNo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `sale_price` decimal(10,2) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `sale_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `review` tinyint(4) NOT NULL,
   `is_show` tinyint(4) NOT NULL,
@@ -419,13 +419,13 @@ CREATE TABLE IF NOT EXISTS `product_sub` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 正在导出表  laravel_test.product_sub 的数据：~2 rows (大约)
 /*!40000 ALTER TABLE `product_sub` DISABLE KEYS */;
 INSERT INTO `product_sub` (`id`, `product_id`, `productNo`, `price`, `sale_price`, `image`, `review`, `is_show`, `sort_order`, `private_attr`, `created_at`, `updated_at`, `deleted_at`) VALUES
 	(6, 1, '123123', 123123.00, 12313.00, '', 1, 0, '123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"},"option_test123":{"13":"test1"}}', '2016-08-14 12:15:40', '2016-08-14 13:27:31', NULL),
-	(7, 1, '123123', 123123.00, 12313.00, '', 1, 1, '123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"},"option_test123":{"14":"test2"}}', '2016-08-14 12:15:40', '2016-08-14 13:14:57', '2016-08-14 13:14:57');
+	(7, 1, '123123123', 123123.00, 12313.00, '', 1, 1, '123', '{"check_box":{"6":"\\u591a\\u90091"},"option_test":{"8":"\\u6d4b\\u8bd5\\u9009\\u98792-1"},"option_tests":{"10":"\\u6d4b\\u8bd5\\u9009\\u98793-1"},"option_test123":{"14":"test2"}}', '2016-08-14 12:15:40', '2016-08-14 13:14:57', '2016-08-14 13:14:57');
 /*!40000 ALTER TABLE `product_sub` ENABLE KEYS */;
 
 
