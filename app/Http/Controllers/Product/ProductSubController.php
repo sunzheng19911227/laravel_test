@@ -83,7 +83,7 @@ class ProductSubController extends AdminBaseController
 		return $arr;
 	}
 
-	public function store(Request $request) {
+	public function store(Requests\ProductSubRequest $request) {
 
 		// 筛选出选项字段
 		$options = array();
@@ -149,7 +149,7 @@ class ProductSubController extends AdminBaseController
 		return view('product.product.edit_product_sub', $this->data);
 	}
 
-	public function update(Request $request, $id) {
+	public function update(Requests\ProductSubRequest $request, $id) {
 
 		$product_sub = ProductSub::findOrFail($id);
 		$product_sub->price = $request->input('price');

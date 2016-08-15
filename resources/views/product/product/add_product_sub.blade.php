@@ -143,7 +143,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="form-group last">
+                                <div class="form-group last {{ $errors->has('file') ? ' has-error' : '' }}">
                                     <label class="control-label col-lg-2">Image Upload</label>
                                     <div class="col-md-9">
                                         <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -161,6 +161,9 @@
                                             </div>
                                         </div>
                                         <br/>
+                                        @if ($errors->has('file'))
+                                        <p class="help-block">{{ $errors->first('file') }}</p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div id="form_test">

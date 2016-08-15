@@ -81,7 +81,7 @@
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">供应商</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="supplier_id">
-                                            <option>请选择供应商</option>
+                                            <option value="">请选择供应商</option>
                                             @if(!empty($supplier_lists))
                                             @foreach($supplier_lists as $list)
                                             <option value="{{ $list['id'] }}" 
@@ -95,7 +95,7 @@
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">品牌</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="brand_id">
-                                            <option>请选择品牌</option>
+                                            <option value="">请选择品牌</option>
                                             @if(!empty($brand_lists))
                                             @foreach($brand_lists as $list)
                                             <option value="{{ $list['id'] }}" 
@@ -109,7 +109,7 @@
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类型</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="category_id" id="category_id" onchange="create_form()">
-                                            <option>请选择类型</option>
+                                            <option value="">请选择类型</option>
                                             @if(!empty($category_lists))
                                             @foreach($category_lists as $list)
                                             <option value="{{ $list['id'] }}" 

@@ -52,7 +52,7 @@ class ProductController extends AdminBaseController
     	return view('product.product.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\ProductRequest $request) {
     	$product = new Product;
     	$product->supplier_id = $request->input('supplier_id');
     	$product->brand_id = $request->input('brand_id');
@@ -106,7 +106,7 @@ class ProductController extends AdminBaseController
     	return view('product.product.edit', $this->data);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Requests\ProductRequest $request, $id) {
 
     	$product = Product::findOrFail($id);
     	$product->supplier_id = $request->input('supplier_id');
