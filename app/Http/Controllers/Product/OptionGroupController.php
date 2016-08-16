@@ -23,7 +23,7 @@ class OptionGroupController extends AdminBaseController
         $category = Category::all();
         $this->data['category'] = $category;
         // 获取属性 
-        $attr = Attr::all();
+        $attr = Attr::where('input_box_type','=','2')->get();
         $this->data['attr'] = $attr;
     }
 

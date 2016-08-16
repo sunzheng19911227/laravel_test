@@ -56,11 +56,11 @@
             <!-- page heading start-->
             <div class="page-heading">
                 <h3>
-                    类别列表
+                    类型列表
                 </h3>
                 <ul class="breadcrumb">
                     <li>
-                        <a href="editable_table.html#">类别列表</a>
+                        <a href="editable_table.html#">类型列表</a>
                     </li>
                     <li>
                         <a href="editable_table.html#">Data Table</a>
