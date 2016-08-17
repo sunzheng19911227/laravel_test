@@ -43,7 +43,7 @@ class CategoryController extends AdminBaseController
     	return view('product.category.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\CategoryRequest $request) {
     	$category = new Category();
     	$category->pid = $request->input('pid');
     	$category->name = $request->input('name');
@@ -71,7 +71,7 @@ class CategoryController extends AdminBaseController
     	return view('product.category.edit', $this->data);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Requests\CategoryRequest $request, $id) {
     	$category = Category::findOrFail($id);
     	$category->pid = $request->input('pid');
     	$category->name = $request->input('name');

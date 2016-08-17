@@ -32,7 +32,7 @@ class SupplierController extends AdminBaseController
     	return view('product.supplier.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\SupplierRequest $request) {
     	$supplier = new Supplier();
     	$supplier->name = $request->input('name');
     	$supplier->description = $request->input('description');
@@ -52,7 +52,7 @@ class SupplierController extends AdminBaseController
     	return view('product.supplier.edit', $this->data);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Requests\SupplierRequest $request, $id) {
     	$supplier = Supplier::findOrFail($id);
     	$supplier->name = $request->input('name');
     	$supplier->description = $request->input('description');

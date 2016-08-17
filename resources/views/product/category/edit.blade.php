@@ -79,11 +79,11 @@
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->has('pid') ? ' has-error' : '' }}">
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">上级菜单</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="pid">
-                                            <option>顶级分类</option>
+                                            <option value="0">顶级分类</option>
                                             @if(!empty($lists))
                                             @foreach($lists as $list)
                                             <option value="{{ $list['id'] }}" 

@@ -28,7 +28,7 @@ class BrandController extends AdminBaseController
     	return view('product.brand.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\BrandRequest $request) {
     	$brand = new Brand();
     	$brand->name = $request->input('name');
     	$brand->sort_order = $request->input('sort_order');
@@ -48,7 +48,7 @@ class BrandController extends AdminBaseController
     	return view('product.brand.edit', $this->data);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Requests\BrandRequest $request, $id) {
     	$brand = Brand::findOrFail($id);
     	$brand->name = $request->input('name');
     	$brand->sort_order = $request->input('sort_order');

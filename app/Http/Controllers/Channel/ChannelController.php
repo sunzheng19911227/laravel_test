@@ -60,8 +60,14 @@ class ChannelController extends AdminBaseController
     	}
 	}
 
+    public function destroy($id) {
+    	$channel = Channel::findOrFail($id);
+        $channel->delete();
 
+    	if($channel->trashed()){
+    		return redirect('/channel/channels')->withSuccess('删除成功!');
     	} else {
+    		return redirect('/channel/channels')->withWarning('删除失败!');
     	}
     }
 }

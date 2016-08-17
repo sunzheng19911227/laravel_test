@@ -79,10 +79,11 @@
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类别</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" disabled="disabled" name="category_id">
+                                            <option value="">请选择类别</option>
                                             @if(!empty($category))
                                             @foreach($category as $c)
                                             <option value="{{ $c['id'] }}"

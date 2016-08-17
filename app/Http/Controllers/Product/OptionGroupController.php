@@ -36,7 +36,7 @@ class OptionGroupController extends AdminBaseController
     	return view('product.option_group.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\OptionGroupRequest $request) {
     	$category = Category::findOrFail($request->input('category_id'));
 
     	$option_group = new OptionGroup;
@@ -61,7 +61,7 @@ class OptionGroupController extends AdminBaseController
     	return view('product.option_group.edit', $this->data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Requests\OptionGroupRequest $request, $id){
     	$option_group = OptionGroup::findOrFail($id);
     	$option_group->name = $request->input('name');
     	$option_group->status = $request->input('status');
