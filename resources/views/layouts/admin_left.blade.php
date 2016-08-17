@@ -39,11 +39,11 @@
                 </ul>
             </li>
             @foreach($menus as $menu)
-            <li class="menu-list {{ strstr('/'.$route_path, $menu['route']) !== false ? 'nav-active':'' }}"><a href="#"><i class="fa"></i> <span>{{ $menu['label'] }}</span></a>
+            <li class="menu-list {{ strstr('/'.$route_path, $menu['route']) !== false ? 'nav-active':'' }}"><a href="#"><i class="fa"></i> <span>{{ $menu['name'] }}</span></a>
                 @if(isset($menu['menus']))
                 <ul class="sub-menu-list">
                     @foreach($menu['menus'] as $m)
-                    <li {{ strstr('/'.$route_path, $m['route']) !== false ? 'class=active':'' }}><a href="{{ $m['route'] }}">{{ $m['label'] }}</a></li>
+                    <li {{ strstr('/'.$route_path, $m['route']) !== false ? 'class=active':'' }}><a href="{{ $m['route'] }}">{{ $m['name'] }}</a></li>
                     @endforeach
                 </ul>
                 @endif

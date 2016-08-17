@@ -19,7 +19,7 @@ class AdminBaseController extends Controller
 		$menulist = Permission::where('is_display','=','1')->orderBy('id')->orderBy('sort_order')->get()->toArray();
 		$menus = array();
 		foreach($menulist as $key=>$m){
-			if(Gate::allows($m['name']) === false){
+			if(Gate::allows($m['label']) === false){
 				continue;
 			}
 			if($m['pid'] == 0) {

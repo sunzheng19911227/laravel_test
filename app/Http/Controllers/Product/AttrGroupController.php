@@ -36,7 +36,7 @@ class AttrGroupController extends AdminBaseController
     	return view('product.attr_group.add', $this->data);
     }
 
-    public function store(Request $request) {
+    public function store(Requests\AttrGroupRequest $request) {
     	$category = Category::findOrFail($request->input('category_id'));
 
     	$attr_group = new AttrGroup;
@@ -61,7 +61,7 @@ class AttrGroupController extends AdminBaseController
     	return view('product.attr_group.edit', $this->data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Requests\AttrGroupRequest $request, $id){
     	$attr_group = AttrGroup::findOrFail($id);
     	$attr_group->name = $request->input('name');
     	$attr_group->status = $request->input('status');

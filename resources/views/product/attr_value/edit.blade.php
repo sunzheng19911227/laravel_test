@@ -79,10 +79,11 @@
                                 <input type="hidden" name="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->has('attribute_id') ? ' has-error' : '' }}">
                                     <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">属性名称</label>
                                     <div class="col-lg-10">
                                         <select class="form-control m-bot15" name="attribute_id" disabled="disabled">
+                                            <option value="">请选择</option>
                                             @if(!empty($lists))
                                             @foreach($lists as $list)
                                             <option value="{{ $list['id'] }}" 

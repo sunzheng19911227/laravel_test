@@ -62,3 +62,8 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 	route::delete('/option_group/detach/{id}/option_group_id/{option_group_id}', 'OptionGroupController@detach');
 	Route::resource('/option_group', 'OptionGroupController');
 });
+
+//  营销渠道
+Route::group(['prefix' => 'channel', 'namespace' => 'Channel', 'middleware' => 'auth'], function() {
+	Route::resource('/channels', 'ChannelController');
+});

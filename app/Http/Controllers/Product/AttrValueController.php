@@ -60,7 +60,7 @@ class AttrValueController extends AdminBaseController
     	return view('product.attr_value.add', $this->data);
     }
 
-    public function store(Request $request){
+    public function store(Requests\AttrValueRequest $request){
     	$attr_value = new AttrValue();
     	$attr_value->name = $request->input('name');
     	$attr_value->status = $request->input('status');
@@ -82,7 +82,7 @@ class AttrValueController extends AdminBaseController
         return view('product.attr_value.edit', $this->data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Requests\AttrValueRequest $request, $id){
         $attr_value = AttrValue::findOrFail($id);
         $attr_value->name = $request->input('name');
         $attr_value->status = $request->input('status');

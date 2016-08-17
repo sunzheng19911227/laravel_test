@@ -9,6 +9,7 @@ use Validator;
 use App\Permission;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
+use App\Http\Controllers\TreeController;
 
 class MenuController extends AdminBaseController
 {
@@ -21,7 +22,11 @@ class MenuController extends AdminBaseController
         // 获取当前路由
         $this->data['route_path'] = $request->path();
         //  获取二级数据
-        $this->data['lists'] = Permission::with('chindren')->where('pid', '=', '0')->get()->toArray();
+        //$this->data['lists'] = Permission::with('chindren')->where('pid', '=', '0')->get()->toArray();
+        $permissions = Permission::all()->toArray();
+        $tree = new TreeController();
+        $tree->tree($permissions);
+        $this->data['lists'] = $tree->getArray();
     }
 
     // 显示页面
@@ -40,7 +45,7 @@ class MenuController extends AdminBaseController
     }
 
     // 添加处理
-    public function store(Request $request) {
+    public function store(Requests\PermissionRequest $request) {
     	//  验证表单数据
     	$validator = $this->validator( $request->all() );
         if ($validator->fails()) {
@@ -73,7 +78,7 @@ class MenuController extends AdminBaseController
     }
 
     // 修改处理
-    public function update(Request $request) {
+    public function update(Requests\PermissionRequest $request) {
     	//  验证表单数据
     	$validator = $this->validator( $request->all(), 'update');
         if ($validator->fails()) {

@@ -85,13 +85,11 @@
                         <div class="panel-body">
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
-                                    @can('管理员添加')
                                     <div class="btn-group">
                                         <a href="{{ url('/admin/roles/create') }}"><button id="add—admin" class="btn btn-primary">
-                                            添加数据 <i class="fa fa-plus"></i>
+                                            添加权限组 <i class="fa fa-plus"></i>
                                         </button></a>
                                     </div>
-                                    @endcan
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
                                         </button>

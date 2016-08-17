@@ -21,11 +21,13 @@ class CategoryController extends AdminBaseController
     }
 
     public function index() {
-    	//$this->data['lists'] = Category::all();
     	$categorys = Category::all()->toArray();
-    	$tree = new TreeController();
-    	$tree->tree($categorys);
-    	$categorys_data = $tree->getArray();
+        $categorys_data = array();
+        if($categorys) {
+        	$tree = new TreeController();
+        	$tree->tree($categorys);
+        	$categorys_data = $tree->getArray();
+        }
     	$this->data['lists'] = $categorys_data;
 
     	return view('product.category.list', $this->data);

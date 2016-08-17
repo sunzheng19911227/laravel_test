@@ -125,21 +125,12 @@
                                     <tbody>
                                         @foreach($lists as $list)
                                         <tr class="">
-                                            <td>{{ $list['label'] }}</td>
+                                            <td>{{ $list['name'] }}</td>
                                             <td>{{ $list['route'] }}</td>
-                                            <td class="center">{{ $list['is_display'] }}</td>
-                                            <td><a href="{{ url('/admin/admins/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            <td class="center">{{ $list['is_display'] == '1'?'显示':'隐藏' }}</td>
+                                            <td><a href="{{ url('/admin/menus/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>
-                                            @foreach($list['chindren'] as $l)
-                                            <tr class="">
-                                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $l['label'] }}</td>
-                                                <td>{{ $l['route'] }}</td>
-                                                <td class="center">{{ $l['is_display'] }}</td>
-                                                <td><a href="{{ url('/admin/menus/'.$l['id'].'/edit') }}">Edit</a></td>
-                                                <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $l['id']}} );">Delete</a></td>
-                                            </tr>
-                                            @endforeach
                                         @endforeach
                                     </tbody>
                                 </table>

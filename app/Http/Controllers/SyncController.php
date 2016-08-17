@@ -7,27 +7,36 @@ use App\ProductSub;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
+use Exception;
+use Log;
 
 class SyncController extends Controller
 {
+	// 异常
+	protected $exceptions = ['101'=>'商品添加失败',
+						 	 '102'=>'商品详情添加失败',
+						 	 '103'=>'商品属性添加失败',
+						 	 '104'=>'商品选项添加失败',
+						 	 '105'=>'商品选项值添加失败',
+						 	 '201'=>'品牌添加失败',
+							];
+
 	//   todu 同步分销 和  商城
 	// 
-	public function sync_mall() {
+	public function sync_mall($id = '6') {
 		try{
-			$id = '6';
 			// 查找子商品信息
 			$ProductSub = ProductSub::findOrFail($id);
-			var_dump($ProductSub->toArray());
+			//var_dump($ProductSub->toArray());
 			// 查找主商品信息
 			$product = $ProductSub->product;
-			var_dump($product->toArray());
+			//var_dump($product->toArray());
 			DB::connection('mall')->beginTransaction();
-			//  查找供应商,品牌相关信息
+			//  查找供应商, 品牌相关信息
 			$manufacturer = $this->get_brand($product->brand);
 			//var_Dump($manufacturer);
 			$merchant = $this->get_supplier($product->supplier);
 			//var_dump($merchant);
-			//exit;
 			// 添加数据
 			$mall_product = array();
 			$mall_product['model'] = '';
@@ -59,10 +68,11 @@ class SyncController extends Controller
 			$mall_product['purchase_price'] = $ProductSub->price;//  采购价格
 			$mall_product['merchant_id'] = $merchant->merchant_id;  //
 			$mall_product['merchant'] = $merchant->name;
-			//var_dump($mall_product);
 			$product_id = DB::connection('mall')->table('product')->insertGetId($mall_product,'product_id');
-			var_dump($product_id);
-			//exit;
+			if($product_id) {
+				$this->throw_exception(101);
+			}
+
 			//  添加商品详情
 			$mall_product_description = array();
 			$mall_product_description['product_id'] = $product_id;
@@ -77,27 +87,33 @@ class SyncController extends Controller
 			//var_dump($mall_product_description);
 			//exit;
 			$result = DB::connection('mall')->table('product_description')->insert($mall_product_description);
-			if($result) {
-				throw new Exception("添加商品详情失败", -111);	
+			if(!$result) {
+				$this->throw_exception(102);	
 			}
 			if($ProductSub->private_attr){
 				$private_attr = json_decode($ProductSub->private_attr,true);
 				$options = $this->get_option($private_attr);
-				var_Dump($options);
+				//var_Dump($options);
 			}
 			if($product->public_attr){
 				$public_attr = json_decode($product->public_attr,true);
 				$attributes = $this->get_attribute($public_attr);
-				var_dump($attributes);
+				//var_dump($attributes);
 			}
-			exit;
+			//exit;
+			$mall_product_attributes = array();
 			foreach($attributes as $attribute) {
 				//  添加商品属性表
 				$mall_product_attribute = array();
 				$mall_product_attribute['product_id'] = $product_id;
 				$mall_product_attribute['attribute_id'] = $attribute->attribute_id;
 				$mall_product_attribute['language_id'] = '1';
-				$mall_product_attribute['text'] = $attribute->text;	
+				$mall_product_attribute['text'] = $attribute->text;
+				$mall_product_attributes[] = $mall_product_attribute;
+			}
+			$result = DB::connection('mall')->table('product_attribute')->insert($mall_product_attributes);
+			if(!$result) {
+				$this->throw_exception(103);	
 			}
 
 			foreach($options as $option_id=>$option_value_id) {
@@ -107,7 +123,11 @@ class SyncController extends Controller
 				$mall_product_option['option_id'] = $option_id;
 				$mall_product_option['option_value'] = '';
 				$mall_product_option['required'] = '1';
-
+				$product_option_id = DB::connection('mall')->table('product_option')->insertGetId($mall_product_option, 'product_option_id');
+				if(!$product_option_id) {
+					$this->throw_exception(104);
+				}
+				//  添加商品选项值表
 				$mall_product_option_value = array();
 				$mall_product_option_value['product_option_id'] = $product_option_id;
 				$mall_product_option_value['product_id'] = $product_id;
@@ -122,16 +142,26 @@ class SyncController extends Controller
 				$mall_product_option_value['weight_prefix'] = '+';
 				$mall_product_option_value['other_option_code'] = '';
 				$mall_product_option_value['other_option_codeTow'] = '';
+				$result = DB::connection('mall')->table('product_option_value')->insert($mall_product_option_value);
+				if(!$result) {
+					$this->throw_exception(105);
+				}
 			}
-
-
-		} catch(Exception $e){
+			DB::connection('mall')->commit();
+		} catch(Exception $e) {
+			DB::connection('mall')->rollback();
 			$data = array('code'=>$e->getCode(), 'message'=>$e->getMessage());
 			echo json_encode($data);
-			DB::connection('mall')->rollback();
+			// 获取当前登录用户 $request->user()
+			Log::error(json_encode($data));
 		}
 	}
 
+	//  抛出异常
+	protected function throw_exception($code) {
+		throw new Exception($this->exceptions[$code], $code);
+	}
+	
 
 	// 验证选项是否存在
 	protected function get_option($private_attr){
@@ -236,6 +266,7 @@ class SyncController extends Controller
 	protected function get_brand($brand){
 		//  验证是否已存在品牌
 		$manufacturer = DB::connection('mall')->table('manufacturer')->where('name',$brand->name)->first();
+
 		if(!$manufacturer) {
 			// 没有查找到品牌,新增
 			$manufacturer_id = DB::connection('mall')
@@ -247,6 +278,8 @@ class SyncController extends Controller
 				'manufacturer_id');
 			if($manufacturer_id){
 				$this->get_brand($brand);
+			} else {
+				$this->throw_exception(201);
 			}
 		} else {
 			return $manufacturer;

@@ -78,40 +78,34 @@
                                     <input type="hidden" name="_method" value="PUT">
                                     <input type="hidden" name="id" value="{{ $data['id'] }}">
                                     <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                    <div class="form-group">
+                                    <div class="form-group{{ $errors->has('pid') ? ' has-error' : '' }}">
                                         <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">上级菜单</label>
                                         <div class="col-lg-10">
                                             <select class="form-control m-bot15" name="pid">
-                                                <option>顶级分类</option>
+                                                <option value='0'>顶级分类</option>
                                                 @foreach($lists as $list)
                                                 <option value="{{ $list['id'] }}" 
                                                 @if($data['pid'] == $list['id'])
                                                     selected="selected"
-                                                @endif >{{ $list['label']}}</option>
-                                                    @foreach($list['chindren'] as $l)
-                                                    <option value="{{ $l['id'] }}" 
-                                                    @if($data['pid'] == $l['id'])
-                                                    selected="selected"
-                                                    @endif>&nbsp;&nbsp;&nbsp;&nbsp;{{ $l['label']}}</option>
-                                                    @endforeach
+                                                @endif >{{ $list['name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                        <label class="col-lg-2 control-label">权限认证标识</label>
+                                        <label class="col-lg-2 control-label">菜单名称</label>
                                         <div class="col-lg-10">
-                                            <input type="text" disabled="true" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name'] :old('name') }}">
+                                            <input type="text" placeholder="" id="name" name="name" class="form-control" value="{{ isset($data['name']) ? $data['name'] :old('name') }}">
                                             @if ($errors->has('name'))
                                             <p class="help-block">{{ $errors->first('name') }}</p>
                                             @endif
                                         </div>
                                     </div>
                                     <div class="form-group{{ $errors->has('label') ? ' has-error' : '' }}">
-                                        <label class="col-lg-2 control-label">菜单名称</label>
+                                        <label class="col-lg-2 control-label">权限认证标识</label>
                                         <div class="col-lg-10">
-                                            <input type="text" placeholder="" id="label" name="label" class="form-control" value="{{ isset($data['label']) ? $data['label'] :old('label') }}">
+                                            <input type="text" disabled="true" placeholder="" id="label" name="label" class="form-control" value="{{ isset($data['label']) ? $data['label'] :old('label') }}">
                                             @if ($errors->has('label'))
                                             <p class="help-block">{{ $errors->first('label') }}</p>
                                             @endif

@@ -28,7 +28,7 @@ class AttrController extends AdminBaseController
     	return view('product.attr.add', $this->data);
     }
 
-    public function store(Request $request){
+    public function store(Requests\AttrRequest $request){
     	$attr = new Attr();
     	$attr->name = $request->input('name');
         $attr->input_name = $request->input('input_name');
@@ -50,7 +50,7 @@ class AttrController extends AdminBaseController
     	return view('product.attr.edit', $this->data);
     }
 
-    public function update(Request $request, $id){
+    public function update(Requests\AttrRequest $request, $id){
     	$attr = Attr::findOrFail($id);
     	$attr->name = $request->input('name');
         $attr->input_name = $request->input('input_name');
