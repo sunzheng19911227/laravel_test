@@ -23,6 +23,7 @@ class AdminController extends AdminBaseController
     {
         //  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        $this->data['breadcrumbs'] = $this->breadcrumbs($request);
         // 获取当前路由
         $this->data['route_path'] = $request->path();
     }

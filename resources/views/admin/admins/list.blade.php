@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    管理员列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">权限管理</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
