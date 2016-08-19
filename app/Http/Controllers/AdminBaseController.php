@@ -53,6 +53,7 @@ class AdminBaseController extends Controller
 		return $m;
 	}
 
+	// 获得上级菜单
 	protected function getSuperiorMenu($pid, $array = array()) {
 		$m = DB::table('permissions')->where('id',$pid)->first();
 		array_push($array, $m);

@@ -43,8 +43,35 @@ class ProductController extends AdminBaseController
          });
     }
 
-    public function index() {
-    	$this->data['lists'] = Product::all();
+    public function index(Request $request) {
+        $this->data['name'] = $request->has('name')?$request->input('name'):'';
+        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(10);
+        foreach($lists as $key=>$list){
+            // 验证子商品下架状态
+            $product = product::findOrFail($list->id);
+            // 获得子商品上架的总数
+            $show_counts = $product->ProductSub()->where('review','1')->where('is_show','1')->count();
+            // 获得子商品下架的总数
+            $hide_counts = $product->ProductSub()->where('review','1')->where('is_show','0')->count();
+            /*  
+                主商品列表显示状态：
+                status = 1 全部上架   
+                status = 0 全部下架
+                status = -1 部分下架
+                status = -2 无子商品
+            */
+            if($show_counts > 0 && $hide_counts = 0) {
+                $status = '全部上架';
+            } else if($show_counts == 0 && $hide_counts > 0) {
+                $status = '全部下架';
+            } else if($show_counts > 0 && $hide_counts > 0) {
+                $status = '部分下架';
+            } else if($show_counts == 0 && $hide_counts == 0) {
+                $status = '无子商品';
+            }
+            $lists[$key]['status'] = $status;
+        }
+        $this->data['lists'] = $lists;
     	return view('product.product.list', $this->data);
     }
 

@@ -10,7 +10,6 @@
   <title>Editable Table</title>
 
   <!--data table-->
-  <link rel="stylesheet" href="{{ asset('/assets/admin/js/data-tables/DT_bootstrap.css') }}" />
 
   <!--common-->
   <link href="{{ asset('/assets/admin/css/style.css') }}" rel="stylesheet">
@@ -94,8 +93,6 @@
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right">
-                                            <li><a href="editable_table.html#">Print</a></li>
-                                            <li><a href="editable_table.html#">Save as PDF</a></li>
                                             <li><a href="editable_table.html#">Export to Excel</a></li>
                                         </ul>
                                     </div>
@@ -121,12 +118,22 @@
                                         </div>
                                     @endif
                                 </div>
-                                <table class="table table-striped table-hover table-bordered" id="editable-sample">
+                                <div class="col-lg-6">
+                                    <form action="{{ url('product/products') }}" method="get">
+                                    <div class="dataTables_filter" style="float:left;" id="editable-sample_filter">
+                                        <label>Search:<input type="text" aria-controls="editable-sample" placeholder="商品名称" name='name' value="{{ $name }}" class="form-control medium">
+                                        </label>
+                                    </div>
+                                    </form>
+                                </div>
+                                <table class="table table-striped table-hover table-bordered" id="editable-sample" style="margin-top:10px;">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" name="id"></th>
                                             <th>id</th>
                                             <th>商品名称</th>
                                             <th>添加时间</th>
+                                            <th>下架状态</th>
                                             <th>查看子商品</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
@@ -135,9 +142,11 @@
                                     <tbody>
                                         @foreach($lists as $list)
                                         <tr class="">
+                                            <td><input type="checkbox" name="id"></td>
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['name'] }}</td>
                                             <td>{{ $list['created_at'] }}</td>
+                                            <td>{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id']) }}">查看子商品</a></td>
                                             <td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
@@ -146,6 +155,7 @@
                                     </tbody>
                                 </table>
                             </div>
+                            {!! $lists->appends(['name'=>$name])->render() !!}
                         </div>
                     </section>
                 </div>
@@ -202,15 +212,8 @@
 <script src="{{ asset('/assets/admin/js/modernizr.min.js') }}"></script>
 <script src="{{ asset('/assets/admin/js/jquery.nicescroll.js') }}"></script>
 
-<!--data table-->
-<script type="text/javascript" src="{{ asset('/assets/admin/js/data-tables/jquery.dataTables.js') }}"></script>
-<script type="text/javascript" src="{{ asset('/assets/admin/js/data-tables/DT_bootstrap.js') }}"></script>
-
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
-
-<!--script for editable table-->
-<script src="{{ asset('/assets/admin/js/editable-table.js') }}"></script>
 
 <!-- END JAVASCRIPTS -->
 <script>
