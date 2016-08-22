@@ -88,6 +88,16 @@
                                         <a href="{{ url('/product/products/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加主商品 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        <meta name="_token" content="{{ csrf_token() }}">
+                                        <a onclick="batch('delete')"><button id="add—admin" class="btn btn-primary">
+                                            批量删除
+                                        </button></a>
+                                        <a onclick="batch('show')"><button id="add—admin" class="btn btn-primary">
+                                            批量上架
+                                        </button></a>
+                                        <a onclick="batch('hide')"><button id="add—admin" class="btn btn-primary">
+                                            批量下架
+                                        </button></a>
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -120,6 +130,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <form action="{{ url('product/products') }}" method="get">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <div class="dataTables_filter" style="float:left;" id="editable-sample_filter">
                                         <label>Search:<input type="text" aria-controls="editable-sample" placeholder="商品名称" name='name' value="{{ $name }}" class="form-control medium">
                                         </label>
@@ -129,7 +140,7 @@
                                 <table class="table table-striped table-hover table-bordered" id="editable-sample" style="margin-top:10px;">
                                     <thead>
                                         <tr>
-                                            <th><input type="checkbox" name="id"></th>
+                                            <th><input type="checkbox" id="all" name="id"></th>
                                             <th>id</th>
                                             <th>商品名称</th>
                                             <th>添加时间</th>
@@ -141,8 +152,8 @@
                                     </thead>
                                     <tbody>
                                         @foreach($lists as $list)
-                                        <tr class="">
-                                            <td><input type="checkbox" name="id"></td>
+                                        <tr class="lists">
+                                            <td><input type="checkbox" name="ids" value="{{ $list['id'] }}"></td>
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['name'] }}</td>
                                             <td>{{ $list['created_at'] }}</td>
@@ -223,6 +234,37 @@
     
     function setDeleteFromAction(id){
         $("#delete-form").attr("action", "/product/products/"+id);
+    }
+
+    $("#all").click(function(){
+        if(this.checked){
+            $(".lists :checkbox").attr("checked", true);   
+        }else{    
+            $(".lists :checkbox").attr("checked", false); 
+        }    
+    });
+
+    function batch(type) {
+        var valArr = new Array; 
+        $(".lists :checkbox[checked]").each(function(i){
+            valArr[i] = $(this).val(); 
+        }); 
+        var vals = valArr.join(',');   //转换为逗号隔开的字符串 
+
+        if(vals != ''){
+            // 批量删除
+            $.ajax({
+                type: "post",
+                url: "/product/products/batch",
+                data: {ids:vals,type:type},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        }
     }
 </script>
 

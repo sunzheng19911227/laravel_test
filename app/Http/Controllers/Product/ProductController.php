@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductSub;
 use App\Supplier;
 use App\Brand;
 use App\Category;
@@ -37,15 +38,13 @@ class ProductController extends AdminBaseController
         // 注册删除事件--删除主商品时删除全部子商品
          Product::deleting(function($product){
             // 删除子商品
-         	if(!$product->ProductSub()->delete()){
-         		return false;
-         	}
+            $product->ProductSub()->delete();
          });
     }
 
     public function index(Request $request) {
         $this->data['name'] = $request->has('name')?$request->input('name'):'';
-        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(10);
+        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(3);
         foreach($lists as $key=>$list){
             // 验证子商品下架状态
             $product = product::findOrFail($list->id);
@@ -60,7 +59,7 @@ class ProductController extends AdminBaseController
                 status = -1 部分下架
                 status = -2 无子商品
             */
-            if($show_counts > 0 && $hide_counts = 0) {
+            if($show_counts > 0 && $hide_counts == 0) {
                 $status = '全部上架';
             } else if($show_counts == 0 && $hide_counts > 0) {
                 $status = '全部下架';
@@ -286,5 +285,24 @@ class ProductController extends AdminBaseController
             }
         }
         echo $html;
+    }
+
+    // 批量处理
+    public function batch(Request $request) {
+        //var_dump($request->all());
+        //exit;
+        $ids = explode(',', $request->input('ids'));
+        if($request->input('type') == 'delete'){  // 批量删除
+            Product::destroy($ids);
+        } else if($request->input('type') == 'show') {  // 批量上架
+            foreach($ids as $id){
+                ProductSub::where('product_id',$id)->save(['is_show'=>'1']);
+            }
+        } else if($request->input('type') == 'hide') {  // 批量下架
+            foreach($ids as $id){
+                 ProductSub::where('product_id',$id)->update(['is_show'=>'0']);
+            }
+        }
+        //echo $result;
     }
 }

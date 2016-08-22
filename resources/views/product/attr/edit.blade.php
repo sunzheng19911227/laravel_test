@@ -251,8 +251,6 @@
                             $('#form1').submit();
                         }
                     } else {
-                        alert('123123');
-                        return;
                         submit_status = true;
                         $('#form1').submit();
                     }

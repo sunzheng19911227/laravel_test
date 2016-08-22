@@ -87,7 +87,6 @@ class ProductSubController extends AdminBaseController
 	}
 
 	public function store(Requests\ProductSubRequest $request) {
-
 		// 筛选出选项字段
 		$options = array();
 		foreach($request->except('_token') as $field=>$value){
@@ -109,8 +108,19 @@ class ProductSubController extends AdminBaseController
 		$private_attr = '';
 		if(count($options) > 0) {   // 设置了选项值,批量添加
 			// 计算选项值排列组合结果集
-			$options = $this->option_assemble($options);
-			$options = call_user_func_array('array_merge',$options);  // 二维转一维
+			if(count($options) > 1 ) {  
+				$options = $this->option_assemble($options);
+				$options = call_user_func_array('array_merge',$options);  // 二维转一维
+			} else {   // 选项值只有一个的情况
+				$array = array();
+				foreach($options as $key=>$option){
+					foreach($option as $o) {
+						$attr_value = AttrValue::findOrFail($o);
+						$array[] = array($key=>array($attr_value->id=>$attr_value->name));
+					}
+				}
+				$options = $array;
+			}
 
 			foreach($options as $option) {
 				$private_attr = json_encode($option);
