@@ -24,7 +24,7 @@ class AttrGroupRequest extends Request
     public function rules()
     {
         return [
-            'category_id'=>'required|numeric',
+            'category_id'=>'required',
             'name'=>'required|max:255',
             'status'=>'required|numeric',
             'sort_order'=>'numeric',

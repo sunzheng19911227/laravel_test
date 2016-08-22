@@ -73,10 +73,11 @@
                             属性编辑
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/property/'.$data['id']) }}">
+                            <form role="form" id="form1" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/property/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <meta name="_token" content="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="id" value="{{ $data['id'] }}">
+                                <input type="hidden" name="id" id="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -189,7 +190,7 @@
 
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
-                                        <button class="btn btn-primary" type="submit">Submit</button>
+                                        <button class="btn btn-primary" id="submit" type="submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -224,6 +225,48 @@
 
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
+<script type="text/javascript">
 
+    var submit_status = false;
+
+    $('#submit').click(function(){
+        var id = $('#id').val();
+        var status = $("input[name='status']:checked").val();
+        var status_data = "{{ $data['status'] }}";
+
+        if(status != status_data) {
+            $.ajax({
+                type: "post",
+                url: "/product/property/check_status",
+                data: {id : id},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                async:false,
+                dataType:'json',
+                success: function (data) {
+                    if( data.pro_count > 0 || data.pro_sub_count > 0 ) {
+                        if(confirm('这个修改会影响'+data.pro_count+'个主商品信息和'+data.pro_sub_count+'个子商品信息，请确认是否修改?')){
+                            submit_status = true;
+                            $('#form1').submit();
+                        }
+                    } else {
+                        alert('123123');
+                        return;
+                        submit_status = true;
+                        $('#form1').submit();
+                    }
+                }
+            });
+        } else {
+            submit_status = true;
+            $('#form1').submit();
+        }
+    });
+
+    $('#form1').submit(function(){
+        return submit_status;
+    });
+</script>
 </body>
 </html>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Product;
 
 use Illuminate\Http\Request;
 use App\Attr;
+use App\Product;
+use App\ProductSub;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
 
@@ -78,5 +80,16 @@ class AttrController extends AdminBaseController
     	} else {
     		return redirect('/product/property')->withWarning('删除失败!');
     	}
+    }
+
+    // 验证受影响的商品数量
+    public function check_status(Request $request) {
+        $count = array('pro_count'=>0,'pro_sub_count'=>0);
+        $attr = Attr::findOrFail($request->input('id'));
+        // 获得受影响的商品数量
+        $count['pro_count'] = Product::where('public_attr','like','%\"'.$attr->input_name.'\"%')->count();
+        $count['pro_sub_count'] = ProductSub::where('private_attr','like','%\"'.$attr->input_name.'\"%')->count();
+
+        echo json_encode($count);
     }
 }

@@ -47,6 +47,8 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 	Route::resource('/category', 'CategoryController');
 	Route::resource('/supplier', 'SupplierController');
 	Route::resource('/brand', 'BrandController');
+
+	Route::post('/property/check_status', 'AttrController@check_status');
 	Route::resource('/property', 'AttrController');
 
 	Route::get('/attr_value/create_value/{id}', 'AttrValueController@create_value');
@@ -54,11 +56,13 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 
 	Route::get('/attr_group/relevance/{id}', 'AttrGroupController@relevance');
 	Route::put('/attr_group/relevance_handle', 'AttrGroupController@relevance_handle');
+	Route::post('/attr_group/check_status', 'AttrGroupController@check_status');
 	route::delete('/attr_group/detach/{id}/attr_group_id/{attr_group_id}', 'AttrGroupController@detach');
 	Route::resource('/attr_group', 'AttrGroupController');
 
 	Route::get('/option_group/relevance/{id}', 'OptionGroupController@relevance');
 	Route::put('/option_group/relevance_handle', 'OptionGroupController@relevance_handle');
+	Route::post('/option_group/check_status', 'OptionGroupController@check_status');
 	route::delete('/option_group/detach/{id}/option_group_id/{option_group_id}', 'OptionGroupController@detach');
 	Route::resource('/option_group', 'OptionGroupController');
 });

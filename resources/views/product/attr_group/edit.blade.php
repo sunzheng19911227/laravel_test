@@ -73,29 +73,13 @@
                             属性组编辑
                         </header>
                         <div class="panel-body">
-                            <form role="form" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr_group/'.$data['id']) }}">
+                            <form role="form" id="form1" class="form-horizontal adminex-form" method="POST" action="{{ url('/product/attr_group/'.$data['id']) }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <meta name="_token" content="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="id" value="{{ $data['id'] }}">
+                                <input type="hidden" name="id" id="id" value="{{ $data['id'] }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
-                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类别</label>
-                                    <div class="col-lg-10">
-                                        <select class="form-control m-bot15" disabled="disabled" name="category_id">
-                                            <option value="">请选择类别</option>
-                                            @if(!empty($category))
-                                            @foreach($category as $c)
-                                            <option value="{{ $c['id'] }}"
-                                            @if($attr_group['id'] === $c['id'])
-                                            selected="selected"
-                                            @endif
-                                            >{{ $c['name']}}</option>
-                                            @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">名称</label>
                                     <div class="col-lg-10">
@@ -135,10 +119,28 @@
                                         @endif
                                     </div>
                                 </div>
+                                <div class="form-group {{ $errors->has('category_id') ? ' has-error' : '' }}">
+                                    <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">类别</label>
+                                    <div class="col-lg-10">
+                                        <div class="checkbox">
+                                            @foreach($category as $c)
+                                            <label>
+                                                <input type="checkbox" name="category_id[]" value="{{ $c['id'] }}"
+                                                @foreach ($categorys_data as $category_data)
+                                                    @if($category_data['id'] == $c['id'])
+                                                        checked="checked"
+                                                    @endif
+                                                @endforeach
+                                                >{{ $c['name'] }}
+                                            </label></br>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-10">
-                                        <button class="btn btn-primary" type="submit">Submit</button>
+                                        <button class="btn btn-primary" id="submit" type="submit" >Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -174,5 +176,43 @@
 <!--common scripts for all pages-->
 <script src="{{ asset('/assets/admin/js/scripts.js') }}"></script>
 
+
+<script type="text/javascript">
+
+    var submit_status = false;
+
+    $('#submit').click(function(){
+        var id = $('#id').val();
+        var status = $("input[name='status']:checked").val();
+        var status_data = "{{ $data['status'] }}";
+        if(status != status_data) {
+            $.ajax({
+                type: "post",
+                url: "/product/attr_group/check_status",
+                data: {id : id},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                async:false,
+                success: function (data) {
+                    console.log(data);
+                    if(data > 0) {
+                        if(confirm('这个修改会影响'+data+'个主商品信息，请确认是否修改?')){
+                            submit_status = true;
+                            $('#form1').submit();
+                        }
+                    }
+                }
+            });
+        } else {
+            submit_status = true;
+            $('#form1').submit();
+        }
+    });
+
+    $('#form1').submit(function(){
+        return submit_status;
+    });
+</script>
 </body>
 </html>

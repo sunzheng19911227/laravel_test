@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\AttrGroup;
 use App\Attr;
 use App\category;
+use App\Product;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;
+use App\Http\Controllers\TreeController;
 
 class AttrGroupController extends AdminBaseController
 {
@@ -20,8 +22,12 @@ class AttrGroupController extends AdminBaseController
         // 获取当前路由
         $this->data['route_path'] = $request->path();
         // 获取类别
-        $category = Category::all();
-        $this->data['category'] = $category;
+        $category = Category::where('status','1')->get();
+        // 获取树状数据格式
+        $tree = new TreeController();
+        $tree->tree($category->toArray());
+        $categorys_data = $tree->getArray();
+        $this->data['category'] = $categorys_data;
         // 获取属性 
         $attr = Attr::where('input_box_type','<>','2')->get();
         $this->data['attr'] = $attr;
@@ -37,13 +43,12 @@ class AttrGroupController extends AdminBaseController
     }
 
     public function store(Requests\AttrGroupRequest $request) {
-    	$category = Category::findOrFail($request->input('category_id'));
-
     	$attr_group = new AttrGroup;
     	$attr_group->name = $request->input('name');
     	$attr_group->status = $request->input('status');
     	$attr_group->sort_order = $request->input('sort_order');
-    	$result = $category->attr_group()->save($attr_group);
+    	$result = $attr_group->save();
+      $attr_group->category()->sync($request->input('category_id'));
 
     	if($result){
     		return redirect('/product/attr_group/')->withSuccess('添加成功!');
@@ -52,11 +57,11 @@ class AttrGroupController extends AdminBaseController
     	}
     }
 
-    public function edit($id){
+    public function edit($id) {
     	$attr_group = AttrGroup::findOrFail($id);
     	$this->data['data'] = $attr_group->toArray();
     	foreach($attr_group->category as $g){
-    		  $this->data['attr_group'] = $g->toArray();
+    		  $this->data['categorys_data'][] = $g->toArray();
     	}
     	return view('product.attr_group.edit', $this->data);
     }
@@ -67,6 +72,7 @@ class AttrGroupController extends AdminBaseController
     	$attr_group->status = $request->input('status');
     	$attr_group->sort_order = $request->input('sort_order');
     	$result = $attr_group->save();
+      $attr_group->category()->sync($request->input('category_id'));
 
     	if($result){
     		return redirect('/product/attr_group/')->withSuccess('编辑成功!');
@@ -125,4 +131,16 @@ class AttrGroupController extends AdminBaseController
    			return redirect('/product/attr_group/'.$attr_group_id)->withWarning('解除关联失败,属性不存在!');
    		}
    	}
+
+    // 验证受影响的商品数量
+    public function check_status(Request $request) {
+        $count = 0;
+        $attr_group = AttrGroup::findOrFail($request->input('id'));
+        // 获得关联属性
+        $attrs = $attr_group->attr;
+        foreach($attrs as $attr) {
+            $count += Product::where('public_attr','like','%\"'.$attr->input_name.'\"%')->count();
+        }
+        echo $count;
+    }
 }
