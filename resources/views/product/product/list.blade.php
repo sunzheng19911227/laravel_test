@@ -146,6 +146,7 @@
                                             <th>添加时间</th>
                                             <th>下架状态</th>
                                             <th>查看子商品</th>
+                                            <th>Show</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
@@ -159,6 +160,7 @@
                                             <td>{{ $list['created_at'] }}</td>
                                             <td>{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id']) }}">查看子商品</a></td>
+                                            <td><a href="{{ url('/product/products/'.$list['id']) }}">Show</a></td>
                                             <td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>
@@ -245,11 +247,14 @@
     });
 
     function batch(type) {
-        var valArr = new Array; 
-        $(".lists :checkbox[checked]").each(function(i){
-            valArr[i] = $(this).val(); 
-        }); 
-        var vals = valArr.join(',');   //转换为逗号隔开的字符串 
+        var ids = document.getElementsByName('ids');
+        var arr = [];
+        for(var i=0;i<ids.length;i++) {
+            if(ids[i].checked == true) {
+                arr.push(ids[i].value);
+            }
+        } 
+        var vals = arr.join(',');   //转换为逗号隔开的字符串 
 
         if(vals != ''){
             // 批量删除
@@ -262,6 +267,8 @@
                 },
                 success: function (data) {
                     console.log(data);
+                    alert('处理完成');
+                    location.href = "{{ url('product/products') }}";
                 }
             });
         }

@@ -74,6 +74,10 @@ class ProductController extends AdminBaseController
     	return view('product.product.list', $this->data);
     }
 
+    public function show($id){
+        var_dump($id);
+    }
+
     public function create() {
     	return view('product.product.add', $this->data);
     }
@@ -289,14 +293,12 @@ class ProductController extends AdminBaseController
 
     // 批量处理
     public function batch(Request $request) {
-        //var_dump($request->all());
-        //exit;
         $ids = explode(',', $request->input('ids'));
         if($request->input('type') == 'delete'){  // 批量删除
             Product::destroy($ids);
         } else if($request->input('type') == 'show') {  // 批量上架
             foreach($ids as $id){
-                ProductSub::where('product_id',$id)->save(['is_show'=>'1']);
+                ProductSub::where('product_id',$id)->update(['is_show'=>'1']);
             }
         } else if($request->input('type') == 'hide') {  // 批量下架
             foreach($ids as $id){

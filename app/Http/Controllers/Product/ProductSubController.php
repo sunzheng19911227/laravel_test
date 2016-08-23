@@ -46,6 +46,18 @@ class ProductSubController extends AdminBaseController
 		return view('product.product.add_product_sub', $this->data);
 	}
 
+	// 生成商品编号   子商品编号规则：品类id3位（不足3位补0）+6位数字随机组合；保证唯一性。
+	public function buildProductNo($category_id) {
+		// 生成产品编号
+		$productNo = str_pad($category_id, 3, '0', STR_PAD_LEFT).rand(100000, 999999);
+		// 验证唯一性
+		$has = ProductSub::where('productNo', $productNo)->count();
+		if($has != 0) {
+			return $this->buildProductNo($category_id);
+		}
+		return $productNo;
+	}
+
 	//  选项值组合
 	public function option_assemble($arr){
 		if(count($arr) >= 2) {
@@ -94,7 +106,8 @@ class ProductSubController extends AdminBaseController
 				$options[substr($field, 7)] = $value;
 			}
 		}
-
+		var_dump($options);
+		//exit;
 		//  上传文件
 		$filename = '';
 		if( $request->hasFile('file') ) {       
@@ -105,6 +118,17 @@ class ProductSubController extends AdminBaseController
 
 		// 获取主商品实例
 		$product = Product::findOrFail($request->input('product_id'));
+		// 查询子商品选项
+		$private_attr = $product->ProductSub()->pluck('private_attr')->first();
+		if(!empty($private_attr)) { // 当子商品存在
+			$private_attr_length = count(json_decode($private_attr, true));
+			if( $private_attr_length != count($options) ) { // 选项结构跟换时..停用现有全部子商品
+				$product->ProductSub()->update(['is_show'=>'0']);
+			}
+		}
+		//var_dump($product_sub);
+		//exit;
+
 		$private_attr = '';
 		if(count($options) > 0) {   // 设置了选项值,批量添加
 			// 计算选项值排列组合结果集
@@ -113,7 +137,7 @@ class ProductSubController extends AdminBaseController
 				$options = call_user_func_array('array_merge',$options);  // 二维转一维
 			} else {   // 选项值只有一个的情况
 				$array = array();
-				foreach($options as $key=>$option){
+				foreach($options as $key=>$option) {
 					foreach($option as $o) {
 						$attr_value = AttrValue::findOrFail($o);
 						$array[] = array($key=>array($attr_value->id=>$attr_value->name));
@@ -122,10 +146,28 @@ class ProductSubController extends AdminBaseController
 				$options = $array;
 			}
 
+			// 验证子商品是否需要下架
+			$private_attr = $product->ProductSub->pluck('private_attr','id')->toArray();
+			foreach ($private_attr as $key => $value) {
+				//var_dump($value);
+				foreach($options as $option) {
+					$json = json_encode($option);
+					if($value == $json) {
+						continue;
+					}
+					// 停用子商品
+					ProductSub::find($key)->update(['is_show'=>'0']);
+				}
+			}
+
 			foreach($options as $option) {
 				$private_attr = json_encode($option);
-				// 验证选项值是否冲突  todu
-				$product_sub[] = new ProductSub(['productNo'=>$request->input('productNo'),
+				// 验证选项值是否冲突
+				$check = ProductSub::where('private_attr', $private_attr)->count();
+				//var_dump($check);
+				//exit;
+				//var_dump($private_attr);
+				$product_sub[] = new ProductSub(['productNo'=>$this->buildProductNo($product->category_id),
 					'price'=>$request->input('price'),
 					'sale_price' => $request->input('sale_price'),
 					'review' => $request->input('review'),
@@ -135,6 +177,7 @@ class ProductSubController extends AdminBaseController
 					'private_attr' => $private_attr,
 					]);
 			}
+
 			$result = $product->ProductSub()->saveMany($product_sub);   // 批量添加
 		} else {   // 单个子商品
 			$product_sub = new ProductSub();
@@ -222,6 +265,17 @@ class ProductSubController extends AdminBaseController
 					$default_value_data[$key] = $attr;
 				}
 			}
+		} else {  // 获取已经添加的子商品选项信息
+			$private_attr = $product->ProductSub()->pluck('private_attr');
+			$options = array();
+			foreach($private_attr as $attr){
+				$option = json_decode($attr, true);
+				$options = array_merge_recursive($option,$options);
+			}
+			foreach($options as $key=>$option){
+				$k = array_keys($option);
+				$default_value_data[$key] = $k;
+			}
 		}
 
 		// 根据category_id获取选项和选项属性值
@@ -283,7 +337,8 @@ class ProductSubController extends AdminBaseController
 				foreach ($default_value_data as $key => $value) {
 					if($key == substr($data['input_name'], 7) ){
 						$default_value = $value;
-						$is_disabled = true;
+						if($form_type == 'update')
+							$is_disabled = true;
 					}
 				}
                 $disable_value = false;

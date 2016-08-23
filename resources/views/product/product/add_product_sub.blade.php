@@ -81,7 +81,7 @@
                                 <input type="hidden" name="product_id" id="product_id" value="{{ $product_id }}">
 
                                 <!--   class样式说明  has-success:成功 has-error:错误 has-warning:警告    -->
-                                <div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
+                                <!--<div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品编号</label>
                                     <div class="col-lg-10">
                                         <input type="text" placeholder="" id="productNo" name="productNo" class="form-control" value="{{ old('productNo') }}">
@@ -89,7 +89,7 @@
                                         <p class="help-block">{{ $errors->first('productNo') }}</p>
                                         @endif
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="form-group{{ $errors->has('price') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品原价</label>
                                     <div class="col-lg-10">

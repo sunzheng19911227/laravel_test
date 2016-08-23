@@ -25,7 +25,7 @@ class ProductSubRequest extends Request
     {
         return [
             'product_id'=>'required',
-            'productNo'=>'required|unique:product_sub',
+            //'productNo'=>'required|unique:product_sub',
             'price'=>'required|numeric',
             'sale_price'=>'required|numeric',
             'sort_order'=>'numeric',
