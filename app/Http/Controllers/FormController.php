@@ -76,6 +76,7 @@ class FormController extends Controller
 	}
 
 	// 生成复选框
+
 	public function create_checkbox($label_name, $checkbox_name, $checkbox_item, $checked_id = array(), $is_disabled = false,  $disabled_value = false) {
 	   if($disabled_value) {
             $disabled_value = '<p class="help-block" style="color:red">该属性已被禁用</p>';
@@ -85,18 +86,25 @@ class FormController extends Controller
 		foreach($checkbox_item as $key=>$item){
 			$checked = '';
 			$disabled = '';
-	    	if(!empty($checked_id) && array_search($key, $checked_id) !== false){
+	    	if(!empty($checked_id) && array_search($key, $checked_id) !== false) {
 	    		$checked = 'checked = \"checked\" ';
 	    	}
-	    	if($is_disabled === true){
+	    	if($is_disabled === true) {
 				$disabled = 'disabled = \"disabled\"';
 	    	}
-			$checkbox .= '<input type="checkbox" name="'.$checkbox_name.'[]" '.$checked.' value="'.$key.'" '.$disabled.'/>'.$item;
+			$checkbox .= '<label>
+							<input type="checkbox" name="'.$checkbox_name.'[]" '.$checked.' value="'.$key.'" '.$disabled.' onclick="check_box_status(this)"/>'.$item.'
+						  </label>
+						 ';
 		}
-		$str = '<div>
-	                <label>'.$label_name.'</label>
-	                '.$checkbox.'
-                    '.$disabled_value.'
+		$str = '<div class="form-group">
+	                <label class="col-sm-2 control-label col-lg-2" for="inputSuccess">'.$label_name.'</label>
+	                <div class="col-lg-10">
+				 	    <div class="checkbox">
+			                '.$checkbox.'
+		                    '.$disabled_value.'
+		                </div>
+		         	</div>
 	            </div>';
 	    return $str;
 	}

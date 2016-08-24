@@ -75,7 +75,77 @@ class ProductController extends AdminBaseController
     }
 
     public function show($id){
-        var_dump($id);
+        $pro = array();
+
+        $product = Product::findOrFail($id);
+        $pro['product'] = $product->toArray();
+        // 获取类别信息
+        $category = Category::getCategoryById($product->category_id);
+        $pro['product']['category'] = $category['name'];
+        // 获取品牌信息
+        $category = Category::getCategoryById($product->category_id);
+        $pro['product']['category'] = $category['name'];
+        //  获取供应商信息
+        
+        $product_sub = $product->ProductSub()->first();
+        $pro['product_sub_id'] = isset($product_sub) ? $product_sub->id : '';
+        // 获取主商品的属性
+        $public_attrs = json_decode($product->public_attr, true);
+        $attrs = array();
+        foreach($public_attrs as $key=>$public_attr) {
+            $attr = Attr::where('input_name', $key)->first();
+            if($attr->input_box_type == 1) {
+                $attrs[$attr->input_name] = array('name'=>$attr->name, 'value'=>$public_attr);
+            } else {
+                $value = array_values($public_attr);
+                $attrs[$attr->input_name] = array('name'=>$attr->name,'value'=>$value[0]);
+            }
+        }
+        $pro['attrs'] = $attrs;
+        var_Dump($pro);
+        exit;
+        $this->data['data'] = $pro;
+
+        return view('product.product.product_show', $this->data);
+    }
+
+    // 获得已经选中的选项和选项值
+    public function ajax_option_checked(Request $request){
+        $product_id = $request->input('product_id');
+
+        //生成表单
+        $private_attrs = ProductSub::where('product_id', $product_id)->pluck('private_attr');
+        $form_data = array();
+        foreach($private_attrs as $private_attr) {
+            $attr = json_decode($private_attr, true);
+            $form_data = array_merge_recursive($attr, $form_data);   
+        }
+
+        // 获取选中值
+        // if($request->has('product_sub_id')){
+        //     $default_value_data = array();
+        //     $product_sub_id = $request->input('product_sub_id');
+        //     $private_attr = ProductSub::where('id', $product_sub_id)->pluck('private_attr')->first();
+        //     $attrs = json_decode($private_attr, true);
+        //     foreach ($attrs as $key => $attr) {
+        //         foreach($attr as $k=>$value) {
+        //             $default_value_data[$key] = array($k);
+        //         }
+        //     }
+        // }
+
+        $form = new FormController;
+        $html = '';
+        $default_value = '';
+        foreach($form_data as $key=>$data) {
+            //foreach($default_value_data as $k=>$value){
+             //   $default_value = $value;
+            //}
+            // 获取属性的名称
+            $attr_name = Attr::where('input_name',$key)->pluck('name')->first();
+            $html .= $form->create_checkbox($attr_name, $key, $data, $default_value, true);
+        }
+        echo $html;
     }
 
     public function create() {
@@ -214,7 +284,6 @@ class ProductController extends AdminBaseController
                     $default_value_data[$key] = $attr;
                 }
             }
-            //var_dump($default_value_data);
         }
 
         // 根据category_id获取属性和属性值
@@ -305,6 +374,5 @@ class ProductController extends AdminBaseController
                  ProductSub::where('product_id',$id)->update(['is_show'=>'0']);
             }
         }
-        //echo $result;
     }
 }

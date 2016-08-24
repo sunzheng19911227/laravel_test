@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
 //  商品管理
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => 'auth'], function() {
 	Route::post('/products/ajax_create_form', 'ProductController@ajax_create_form');
+	Route::post('/products/ajax_option_checked', 'ProductController@ajax_option_checked');
 	Route::post('/products/batch', 'ProductController@batch');
 	Route::resource('/products', 'ProductController');
 

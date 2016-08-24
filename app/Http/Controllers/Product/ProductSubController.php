@@ -22,12 +22,9 @@ class ProductSubController extends AdminBaseController
 	public function __construct(Request $request)
 	{
 		//  获取左侧菜单
-        $this->data['menus'] = $this->getMeunList();
-        // 获取当前路由
-        $this->data['route_path'] = $request->path();
-
-        //添加完之后同步到老系统
-        
+		$this->data['menus'] = $this->getMeunList();
+		// 获取当前路由
+		$this->data['route_path'] = $request->path();
 	}
 
 	//  查看子商品列表
@@ -106,8 +103,7 @@ class ProductSubController extends AdminBaseController
 				$options[substr($field, 7)] = $value;
 			}
 		}
-		var_dump($options);
-		//exit;
+
 		//  上传文件
 		$filename = '';
 		if( $request->hasFile('file') ) {       
@@ -126,8 +122,6 @@ class ProductSubController extends AdminBaseController
 				$product->ProductSub()->update(['is_show'=>'0']);
 			}
 		}
-		//var_dump($product_sub);
-		//exit;
 
 		$private_attr = '';
 		if(count($options) > 0) {   // 设置了选项值,批量添加
@@ -159,29 +153,33 @@ class ProductSubController extends AdminBaseController
 					ProductSub::find($key)->update(['is_show'=>'0']);
 				}
 			}
-
+			$product_sub = array();
 			foreach($options as $option) {
 				$private_attr = json_encode($option);
 				// 验证选项值是否冲突
 				$check = ProductSub::where('private_attr', $private_attr)->count();
-				//var_dump($check);
-				//exit;
-				//var_dump($private_attr);
+				if( $check > 0 )
+					continue;
+
 				$product_sub[] = new ProductSub(['productNo'=>$this->buildProductNo($product->category_id),
-					'price'=>$request->input('price'),
-					'sale_price' => $request->input('sale_price'),
-					'review' => $request->input('review'),
-					'is_show' => $request->input('is_show'),
-					'sort_order' => $request->input('sort_order'),
-					'image' => $filename,
-					'private_attr' => $private_attr,
+						'price'=>$request->input('price'),
+						'sale_price' => $request->input('sale_price'),
+						'review' => $request->input('review'),
+						'is_show' => $request->input('is_show'),
+						'sort_order' => $request->input('sort_order'),
+						'image' => $filename,
+						'private_attr' => $private_attr,
 					]);
 			}
-
-			$result = $product->ProductSub()->saveMany($product_sub);   // 批量添加
+			if(count($product_sub) > 0 ){
+				$result = $product->ProductSub()->saveMany($product_sub);   // 批量添加
+			} else {
+				return redirect('/product/product_sub/'.$request->input('product_id'))
+						->withSuccess('没有修改!');
+			}
 		} else {   // 单个子商品
 			$product_sub = new ProductSub();
-			$product_sub->productNo = $request->input('productNo');
+			$product_sub->productNo = $this->buildProductNo($product->category_id);
 			$product_sub->price = $request->input('price');
 			$product_sub->sale_price = $request->input('sale_price');
 			$product_sub->review = $request->input('review');
@@ -246,8 +244,8 @@ class ProductSubController extends AdminBaseController
 	public function ajax_create_form(Request $request) {
 		$form_data = array();
 		$default_value_data = array();
-        // 获取表单的类型
-        $form_type = $request->input('form_type');
+		// 获取表单的类型
+		$form_type = $request->input('form_type');
 		// 获取商品的category_id
 		$product = Product::findOrFail($request->input('product_id'));
 		$category_id = $product->category_id;
@@ -277,39 +275,37 @@ class ProductSubController extends AdminBaseController
 				$default_value_data[$key] = $k;
 			}
 		}
-
 		// 根据category_id获取选项和选项属性值
-        $disable = array();
+		$disable = array();
 		$category = Category::findOrFail($category_id);
 		$option_groups = $category->option_group->toArray();
 		foreach($option_groups as $group) {
-		  
-            if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
-                if($group['status'] == 0){
-                    continue;
-                }
-            } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
-                if($group['status'] == 0){
-                    $option_group = OptionGroup::findOrFail($group['id']);
-                    $attrs = $option_group->attr->toArray();
-                    foreach($attrs as $attr) {
-                        $disable[] = $attr['input_name'];
-                    }
-                }
-            }
+			if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+				if($group['status'] == 0){
+					continue;
+				}
+			} elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+				if($group['status'] == 0){
+					$option_group = OptionGroup::findOrFail($group['id']);
+					$attrs = $option_group->attr->toArray();
+					foreach($attrs as $attr) {
+						$disable[] = $attr['input_name'];
+					}
+				}
+			}
 			$option_group = OptionGroup::findOrFail($group['id']);
 			$attrs = $option_group->attr->toArray();
 			foreach($attrs as $attr) {
-                if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
-                    if($attr['status'] == 0){
-                        continue;
-                    }
-                } elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
-                    if($attr['status'] == 0){
-                        $disable[] = $attr['input_name'];
-                    }
-                }
-             
+				if($form_type == 'create') {  // 添加时,忽略status为停用状态的属性组
+					if($attr['status'] == 0){
+						continue;
+					}
+				} elseif( $form_type == 'update') {  // 修改时,标记status为0的属性
+					if($attr['status'] == 0){
+						$disable[] = $attr['input_name'];
+					}
+				}
+			 
 				$array = array();
 				$attr_value = Attr::findOrFail($attr['id'])->AttrValue->toArray();
 				foreach($attr_value as $a) {
@@ -334,19 +330,23 @@ class ProductSubController extends AdminBaseController
 			foreach($form_data as $data) {
 				$default_value = '';
 				$is_disabled = false;
+				$is_continue = true;  // 第一次新增拉取全部选项值, 第二次新增只拉取选过的选项组和属性值
 				foreach ($default_value_data as $key => $value) {
 					if($key == substr($data['input_name'], 7) ){
 						$default_value = $value;
 						if($form_type == 'update')
 							$is_disabled = true;
-					}
+						$is_continue = false;
+					} 
 				}
-                $disable_value = false;
-                if(in_array( (substr($data['input_name'], 7)), $disable)) {
-                    $disable_value = true;
-                }
+				if($is_continue && $default_value_data)
+					continue;
+				$disable_value = false;
+				if(in_array( (substr($data['input_name'], 7)), $disable)) {
+					$disable_value = true;
+				}
 				if($data['input_box_type'] == '1') {
-					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value,false, $disable_value);
+					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $default_value, false, $disable_value);
 				} else {
 					$html .= $form->$input_box[$data['input_box_type']]($data['label_name'], $data['input_name'], $data['item'], $default_value, $is_disabled, $disable_value);
 				}

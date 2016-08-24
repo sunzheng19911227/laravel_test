@@ -84,7 +84,7 @@
                                 <div class="form-group{{ $errors->has('productNo') ? ' has-error' : '' }}">
                                     <label class="col-lg-2 control-label">商品编号</label>
                                     <div class="col-lg-10">
-                                        <input type="text" placeholder="" id="productNo" name="productNo" class="form-control" value="{{ isset($data['productNo'])?$data['productNo']:old('productNo') }}">
+                                        <input type="text" placeholder="" id="productNo" name="productNo" disabled="disabled" class="form-control" value="{{ isset($data['productNo'])?$data['productNo']:old('productNo') }}">
                                         @if ($errors->has('productNo'))
                                         <p class="help-block">{{ $errors->first('productNo') }}</p>
                                         @endif

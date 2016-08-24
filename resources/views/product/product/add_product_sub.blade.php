@@ -233,6 +233,13 @@
         });
     }
 
+    function check_box_status(obj) {
+        //alert('已经选中的不可取消!');
+        console.log(obj);
+        obj.attr("checked", true);
+        return false;
+    }
+
 </script>
 </body>
 </html>
