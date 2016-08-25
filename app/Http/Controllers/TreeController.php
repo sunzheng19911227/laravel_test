@@ -31,7 +31,7 @@ class TreeController
      +------------------------------------------------
      * @var Array
      */
-    var $icon = array('│','├',' └');
+    var $icon = array('│','├','└');
    
     /**
     * @access private
@@ -224,7 +224,7 @@ class TreeController
                 @extract($a);
                 $a['name'] = $spacer.' '.$a['name'];
                 $this->ret[$a['id']] = $a;
-                $fd = $adds.$k.'&nbsp;';
+                $fd = $adds.$k.'&nbsp;&nbsp;&nbsp;&nbsp;';
                 $this->getArray($id, $sid, $fd);
                 $number++;
             }

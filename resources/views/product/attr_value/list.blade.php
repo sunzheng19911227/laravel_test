@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    属性值列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">属性值列表</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -86,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('属性值管理-添加')
                                         <a href="{{ url('/product/attr_value/create_value/'.$attr->id) }}"><button id="add—admin" class="btn btn-primary">
                                             添加属性值 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -129,7 +118,7 @@
                                             <th>属性值</th>
                                             <th>Status</th>
                                             <!--<th>Edit</th>-->
-                                            <th>Delete</th>
+                                            @can('属性值删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -140,7 +129,7 @@
                                             <td>{{ $data['name'] }}</td>
                                             <td class="center">{{ $data['status'] }}</td>
                                             <!--<td><a href="{{ url('/product/attr_value/'.$data['id'].'/edit') }}">Edit</a></td>-->
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $data['id']}} );">Delete</a></td>
+                                            @can('属性值删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $data['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

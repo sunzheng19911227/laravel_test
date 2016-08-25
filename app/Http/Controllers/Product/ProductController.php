@@ -23,6 +23,7 @@ class ProductController extends AdminBaseController
     {
         //  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        $this->data['breadcrumbs'] = $this->breadcrumbs($request);
         // 获取当前路由
         $this->data['route_path'] = $request->path();  
         // 供应商列表
@@ -44,7 +45,7 @@ class ProductController extends AdminBaseController
 
     public function index(Request $request) {
         $this->data['name'] = $request->has('name')?$request->input('name'):'';
-        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(3);
+        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(10);
         foreach($lists as $key=>$list){
             // 验证子商品下架状态
             $product = product::findOrFail($list->id);
@@ -83,12 +84,14 @@ class ProductController extends AdminBaseController
         $category = Category::getCategoryById($product->category_id);
         $pro['product']['category'] = $category['name'];
         // 获取品牌信息
-        $category = Category::getCategoryById($product->category_id);
-        $pro['product']['category'] = $category['name'];
+        $brand = Brand::getBrandById($product->brand_id);
+        $pro['product']['brand'] = $brand['name'];
         //  获取供应商信息
-        
-        $product_sub = $product->ProductSub()->first();
-        $pro['product_sub_id'] = isset($product_sub) ? $product_sub->id : '';
+        $supplier = Supplier::getSupplierById($product->supplier_id);
+        $pro['product']['supplier'] = $supplier['name'];
+
+        //$product_sub = $product->ProductSub()->first();
+        $pro['product_sub_id'] = '';
         // 获取主商品的属性
         $public_attrs = json_decode($product->public_attr, true);
         $attrs = array();
@@ -102,8 +105,7 @@ class ProductController extends AdminBaseController
             }
         }
         $pro['attrs'] = $attrs;
-        var_Dump($pro);
-        exit;
+
         $this->data['data'] = $pro;
 
         return view('product.product.product_show', $this->data);
@@ -122,25 +124,25 @@ class ProductController extends AdminBaseController
         }
 
         // 获取选中值
-        // if($request->has('product_sub_id')){
-        //     $default_value_data = array();
-        //     $product_sub_id = $request->input('product_sub_id');
-        //     $private_attr = ProductSub::where('id', $product_sub_id)->pluck('private_attr')->first();
-        //     $attrs = json_decode($private_attr, true);
-        //     foreach ($attrs as $key => $attr) {
-        //         foreach($attr as $k=>$value) {
-        //             $default_value_data[$key] = array($k);
-        //         }
-        //     }
-        // }
+        $default_value_data = array();
+        if($request->has('product_sub_id')) {
+            $product_sub_id = $request->input('product_sub_id');
+            $private_attr = ProductSub::where('id', $product_sub_id)->pluck('private_attr')->first();
+            $attrs = json_decode($private_attr, true);
+            foreach ($attrs as $key => $attr) {
+                foreach($attr as $k=>$value) {
+                    $default_value_data[$key] = array($k);
+                }
+            }
+        }
 
         $form = new FormController;
         $html = '';
         $default_value = '';
         foreach($form_data as $key=>$data) {
-            //foreach($default_value_data as $k=>$value){
-             //   $default_value = $value;
-            //}
+            foreach($default_value_data as $k=>$value){
+               $default_value = $value;
+            }
             // 获取属性的名称
             $attr_name = Attr::where('input_name',$key)->pluck('name')->first();
             $html .= $form->create_checkbox($attr_name, $key, $data, $default_value, true);

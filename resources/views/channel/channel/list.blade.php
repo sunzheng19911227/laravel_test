@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    渠道列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">渠道列表</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -86,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('渠道管理-添加')
                                         <a href="{{ url('/channel/channels/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加数据 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -127,8 +116,8 @@
                                             <th>id</th>
                                             <th>渠道</th>
                                             <th>是否同步</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            @can('渠道管理-修改')<th>Edit</th>@endcan
+                                            @can('渠道管理-删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,8 +126,8 @@
                                             <td>{{ $list['id'] }}</td>
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['is_sync'] }}</td>
-                                            <td><a href="{{ url('/channel/channels/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            @can('渠道管理-修改')<td><a href="{{ url('/channel/channels/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
+                                            @can('渠道管理-删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

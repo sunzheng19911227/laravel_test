@@ -17,4 +17,12 @@ class Supplier extends Model
     public function Product() {
     	return $this->hasMany(Product::class);
     }
+
+
+	#########################   业务逻辑 #########################
+	// 根据id获取供应商
+	public static function getSupplierById($supplier_id, $field = array()){
+		$supplier = Supplier::findOrFail($supplier_id);
+		return $supplier->toArray();
+	}
 }

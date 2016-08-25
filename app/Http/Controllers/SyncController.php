@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Attr;
 use App\ProductSub;
+use App\Sync;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
@@ -19,7 +20,17 @@ class SyncController extends Controller
 						 	 '104'=>'商品选项添加失败',
 						 	 '105'=>'商品选项值添加失败',
 						 	 '201'=>'品牌添加失败',
+						 	 '301'=>'更新同步信息失败',
 							];
+    protected $connection;
+
+    protected $type;
+
+    // $type 确定同步数据库   mall 为商城   fenxiao 为分销数据库
+    public function __construct($type = 'mall') {
+    	$this->type = $type;
+    	$this->connection = DB::connection($type);
+    }
 
 	//   todu 同步分销 和  商城
 	// 
@@ -31,7 +42,9 @@ class SyncController extends Controller
 			// 查找主商品信息
 			$product = $ProductSub->product;
 			//var_dump($product->toArray());
-			DB::connection('mall')->beginTransaction();
+
+			//  开启事务
+			$this->connection->beginTransaction();
 			//  查找供应商, 品牌相关信息
 			$manufacturer = $this->get_brand($product->brand);
 			//var_Dump($manufacturer);
@@ -68,7 +81,7 @@ class SyncController extends Controller
 			$mall_product['purchase_price'] = $ProductSub->price;//  采购价格
 			$mall_product['merchant_id'] = $merchant->merchant_id;  //
 			$mall_product['merchant'] = $merchant->name;
-			$product_id = DB::connection('mall')->table('product')->insertGetId($mall_product,'product_id');
+			$product_id = $this->connection->table('product')->insertGetId($mall_product,'product_id');
 			if($product_id) {
 				$this->throw_exception(101);
 			}
@@ -86,7 +99,7 @@ class SyncController extends Controller
 			$mall_product_description['subtitle'] = '';
 			//var_dump($mall_product_description);
 			//exit;
-			$result = DB::connection('mall')->table('product_description')->insert($mall_product_description);
+			$result = $this->connection->table('product_description')->insert($mall_product_description);
 			if(!$result) {
 				$this->throw_exception(102);	
 			}
@@ -111,7 +124,7 @@ class SyncController extends Controller
 				$mall_product_attribute['text'] = $attribute->text;
 				$mall_product_attributes[] = $mall_product_attribute;
 			}
-			$result = DB::connection('mall')->table('product_attribute')->insert($mall_product_attributes);
+			$result = $this->connection->table('product_attribute')->insert($mall_product_attributes);
 			if(!$result) {
 				$this->throw_exception(103);	
 			}
@@ -123,7 +136,7 @@ class SyncController extends Controller
 				$mall_product_option['option_id'] = $option_id;
 				$mall_product_option['option_value'] = '';
 				$mall_product_option['required'] = '1';
-				$product_option_id = DB::connection('mall')->table('product_option')->insertGetId($mall_product_option, 'product_option_id');
+				$product_option_id = $this->connection->table('product_option')->insertGetId($mall_product_option, 'product_option_id');
 				if(!$product_option_id) {
 					$this->throw_exception(104);
 				}
@@ -142,14 +155,22 @@ class SyncController extends Controller
 				$mall_product_option_value['weight_prefix'] = '+';
 				$mall_product_option_value['other_option_code'] = '';
 				$mall_product_option_value['other_option_codeTow'] = '';
-				$result = DB::connection('mall')->table('product_option_value')->insert($mall_product_option_value);
+				$result = $this->connection->table('product_option_value')->insert($mall_product_option_value);
 				if(!$result) {
 					$this->throw_exception(105);
 				}
 			}
-			DB::connection('mall')->commit();
+
+			// 同步结束,添加关联记录
+			$result = Sync::sync_data($id, $product_id, $this->type);
+			if(!$result) {
+				$this->throw_exception(301);
+			}
+
+
+			$this->connection->commit();
 		} catch(Exception $e) {
-			DB::connection('mall')->rollback();
+			$this->connection->rollback();
 			$data = array('code'=>$e->getCode(), 'message'=>$e->getMessage());
 			echo json_encode($data);
 			// 获取当前登录用户 $request->user()
@@ -183,11 +204,11 @@ class SyncController extends Controller
 
 	//  验证选项的存在
 	protected function check_option($attr){
-		$option = DB::connection('mall')->table('option_description')->where('name',$attr->name)->first();
+		$option = $this->connection->table('option_description')->where('name',$attr->name)->first();
 		if(!$option) {
 			// 添加选项
-			$option_id = DB::connection('mall')->table('option')->insertGetId(['type'=>'radio','sort_order'=>'1']);
-			$result = DB::connection('mall')->table('option_description')->insert(['option_id'=>$option_id,'language_id'=>1,'name'=>$attr->name]);
+			$option_id = $this->connection->table('option')->insertGetId(['type'=>'radio','sort_order'=>'1']);
+			$result = $this->connection->table('option_description')->insert(['option_id'=>$option_id,'language_id'=>1,'name'=>$attr->name]);
 			if($result){
 				$this->check_option($attr);
 			}
@@ -197,11 +218,11 @@ class SyncController extends Controller
 
 	// 验证选项值存在
 	protected function check_option_value($option_id, $value) {
-		$option_value = DB::connection('mall')->table('option_value_description')->where('option_id', $option_id)->where('name', $value)->first();
+		$option_value = $this->connection->table('option_value_description')->where('option_id', $option_id)->where('name', $value)->first();
 		if(!$option_value) {
 			// 添加选项值 
-			$option_value_id = DB::connection('mall')->table('option_value')->insertGetId(['option_id'=>$option_id,'image'=>'no_image.jpg','sort_order'=>1]);
-			$result = DB::connection('mall')->table('option_value_description')->insert(['option_value_id'=>$option_value_id,'language_id'=>1,'option_id'=>$option_id,'name'=>$value]);
+			$option_value_id = $this->connection->table('option_value')->insertGetId(['option_id'=>$option_id,'image'=>'no_image.jpg','sort_order'=>1]);
+			$result = $this->connection->table('option_value_description')->insert(['option_value_id'=>$option_value_id,'language_id'=>1,'option_id'=>$option_id,'name'=>$value]);
 			if($result){
 				$this->check_option_value($option_id, $value);
 			}
@@ -212,11 +233,11 @@ class SyncController extends Controller
 	// 验证属性组是否存在
 	protected function check_attribute_group($attr_group){
 		// 验证属性组存在
-		$attribute_group = DB::connection('mall')->table('attribute_group_description')->where('name',$attr_group->name)->first();
+		$attribute_group = $this->connection->table('attribute_group_description')->where('name',$attr_group->name)->first();
 		if(!$attribute_group) {
 			// 添加属性组
-			$attribute_group_id = DB::connection('mall')->table('attribute_group')->insertGetId(['sort_order'=>'0'], 'attribute_group_id');
-			$result = DB::connection('mall')->table('attribute_group_description')->insert(['attribute_group_id'=>$attribute_group_id,'language_id'=>'1','name'=>$attr_group->name]);
+			$attribute_group_id = $this->connection->table('attribute_group')->insertGetId(['sort_order'=>'0'], 'attribute_group_id');
+			$result = $this->connection->table('attribute_group_description')->insert(['attribute_group_id'=>$attribute_group_id,'language_id'=>'1','name'=>$attr_group->name]);
 			if($result) {
 				$this->check_attribute_group($attr_group);
 			}
@@ -233,7 +254,7 @@ class SyncController extends Controller
 			// 查找属性信息
 			$attr = Attr::where('input_name', $key)->first();
 			// 查找属性是否存在
-			$attribute = DB::connection('mall')->table('attribute_description')->where('name', $attr->name)->first();
+			$attribute = $this->connection->table('attribute_description')->where('name', $attr->name)->first();
 			if(!$attribute) {
 				// 没有属性先查找属性组,再添加属性
 				$attr_group = $attr->AttrGroup->first();
@@ -241,8 +262,8 @@ class SyncController extends Controller
 				$attribute_group = $this->check_attribute_group($attr_group);
 				$attribute_group_id = $attribute_group?$attribute_group->attribute_group_id:$attribute_group_id;
 				// 添加属性
-				$attribute_id = DB::connection('mall')->table('attribute')->insertGetId(['attribute_group_id'=>$attribute_group_id, 'sort_order'=>'0']);
-				$result = DB::connection('mall')->table('attribute_description')->insert(['attribute_id'=>$attribute_id, 'language_id'=>'1', 'name'=>$attr->name]);
+				$attribute_id = $this->connection->table('attribute')->insertGetId(['attribute_group_id'=>$attribute_group_id, 'sort_order'=>'0']);
+				$result = $this->connection->table('attribute_description')->insert(['attribute_id'=>$attribute_id, 'language_id'=>'1', 'name'=>$attr->name]);
 			} else {
 				if(is_array($value)){
 					foreach($value as $v){
@@ -265,11 +286,11 @@ class SyncController extends Controller
 	//  获取品牌
 	protected function get_brand($brand){
 		//  验证是否已存在品牌
-		$manufacturer = DB::connection('mall')->table('manufacturer')->where('name',$brand->name)->first();
+		$manufacturer = $this->connection->table('manufacturer')->where('name',$brand->name)->first();
 
 		if(!$manufacturer) {
 			// 没有查找到品牌,新增
-			$manufacturer_id = DB::connection('mall')
+			$manufacturer_id = $this->connection
 			->table('manufacturer')
 			->insertGetId(
 				['name' => $brand->name,
@@ -289,10 +310,10 @@ class SyncController extends Controller
 	// 获取供应商
 	protected function get_supplier($supplier){
 		// 验证是否已存在供应商
-		$merchant = DB::connection('mall')->table('merchant')->where('name', $supplier->name)->first();
+		$merchant = $this->connection->table('merchant')->where('name', $supplier->name)->first();
 		if(!$merchant) {
 			// 没有查找到供应商,新增
-			$merchant_id = DB::connection('mall')->table('merchant')->insertGetId(['name' => $supplier->name,
+			$merchant_id = $this->connection->table('merchant')->insertGetId(['name' => $supplier->name,
 				'interface_type' => '',
 				'description' => '',
 				'image' => '',

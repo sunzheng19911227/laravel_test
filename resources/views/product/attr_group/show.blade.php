@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    属性组对应属性列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">属性组对应属性列表</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -86,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('属性组管理-关联属性')
                                         <a href="{{ url('/product/attr_group/relevance/'.$attr_group['id']) }}"><button id="add—admin" class="btn btn-primary">
                                             关联属性 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>

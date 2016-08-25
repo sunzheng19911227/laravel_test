@@ -73,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('管理员管理-添加')
                                         <a href="{{ url('/admin/admins/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加数据 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -115,9 +117,9 @@
                                             <th>管理员名称</th>
                                             <th>邮箱</th>
                                             <th>Status</th>
-                                            <th>Assign</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            @can('管理员管理-权限分配')<th>Assign</th>@endcan
+                                            @can('管理员管理-修改')<th>Edit</th>@endcan
+                                            @can('管理员管理-删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -127,9 +129,9 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td>{{ $list['email'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
-                                            <td><a href="{{ url('/admin/admins/'.$list['id'].'/assign') }}">Assign</a></td>
-                                            <td><a href="{{ url('/admin/admins/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            @can('管理员管理-修改')<td><a href="{{ url('/admin/admins/'.$list['id'].'/assign') }}">Assign</a></td>@endcan
+                                            @can('管理员管理-修改')<td><a href="{{ url('/admin/admins/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
+                                            @can('管理员管理-删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

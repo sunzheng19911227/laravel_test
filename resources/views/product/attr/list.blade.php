@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    属性列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">属性列表</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -86,14 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('属性管理-添加')
                                         <a href="{{ url('/product/property/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加属性 <i class="fa fa-plus"></i>
                                         </button></a>
-                                    </div>
-                                    <div class="btn-group">
-                                        <a href="{{ url('/product/attr_value/create') }}"><button id="add—admin" class="btn btn-primary">
-                                            添加属性值 <i class="fa fa-plus"></i>
-                                        </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -133,7 +117,7 @@
                                             <th>属性名称</th>
                                             <th>Status</th>
                                             <th>查看属性值</th>
-                                            <th>Edit</th>
+                                            @can('属性管理-修改')<th>Edit</th>@endcan
                                             <!--<th>Delete</th>-->
                                         </tr>
                                     </thead>
@@ -144,7 +128,7 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/attr_value/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/property/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            @can('属性管理-修改')<td><a href="{{ url('/product/property/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
                                             <!--<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>-->
                                         </tr>
                                         @endforeach

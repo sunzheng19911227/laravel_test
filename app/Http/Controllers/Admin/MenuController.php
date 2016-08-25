@@ -19,10 +19,10 @@ class MenuController extends AdminBaseController
     {
     	//  获取左侧菜单
         $this->data['menus'] = $this->getMeunList();
+        $this->data['breadcrumbs'] = $this->breadcrumbs($request);
         // 获取当前路由
         $this->data['route_path'] = $request->path();
         //  获取二级数据
-        //$this->data['lists'] = Permission::with('chindren')->where('pid', '=', '0')->get()->toArray();
         $permissions = Permission::all()->toArray();
         $tree = new TreeController();
         $tree->tree($permissions);

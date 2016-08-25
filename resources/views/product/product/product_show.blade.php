@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    查看商品详情
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">查看商品详情</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -119,21 +106,23 @@
                                     @endif
                                     <meta name="_token" content="{{ csrf_token() }}">
                                     <div>
-                                        <div style="float:left;">
-                                            <img src="{{ asset('/assets/admin/images/404-error.png') }}" alt="">
+                                        <div id="pro_image" style="float:left; display:none;" >
+                                            <img id="image" src="{{ asset('/assets/admin/images/404-error.png') }}" alt="">
                                         </div>
                                         <div style="float:right; width:60%;">
                                             <h4>基本信息</h4>
                                             <div>商品名称:<span>{{ $data['product']['name'] }}</span></div>
-                                            <!--<div>NO:<span>123123123</span></div>-->
-                                            <div>商品类型:<span>手机</span></div>
-                                            <div>供货商:<span>爱康国宾</span></div>
-                                            <div>品牌:<span>爱康国宾</span></div>
+                                            <div id="productNo" style="display:none;">NO:<span id="product_No">123123123</span></div>
+                                            <div>商品类型:<span>{{ $data['product']['category'] }}</span></div>
+                                            <div>供货商:<span>{{ $data['product']['supplier'] }}</span></div>
+                                            <div>品牌:<span>{{ $data['product']['brand'] }}</span></div>
                                             <h4>销售属性</h4>
                                             <div id="form_test"></div>
-                                            <!--<h4>商品价格</h4>
-                                            <div>市场价:<span>1300</span>元</div>
-                                            <div>销售价:<span>1300</span>元</div>-->
+                                            <div id="pro_sub_price" style="display:none;">
+                                                <h4>商品价格</h4>
+                                                <div>市场价:<span id="price">1300</span>元</div>
+                                                <div>销售价:<span id="sale_price">1300</span>元</div>
+                                            </div>
                                         </div>
                                         <div style="float:left; width:80%;">
                                             <h4>商品属性</h4>
@@ -219,8 +208,10 @@
     jQuery(document).ready(function() {
         var product_id = '<?php echo $data['product']['id']?>';
         var product_sub_id = '<?php echo $data['product_sub_id'] ?>';
-        console.log(product_id);
+        console.log(product_sub_id);
         ajax_option_checked(product_id, product_sub_id);
+        if(product_sub_id != '')
+            ajax_pro_sub(product_sub_id);
     });
     
     //  拉取已经选中的选项值
@@ -234,15 +225,37 @@
             },
             dataType: "html",
             success: function (data) {
-                //console.log(data);
                 $('#form_test').html(data);
             }
         });
     }
 
     // 获取子商品信息
-    function ajax_pro_sub(product_sub_id) {
-
+    function ajax_pro_sub(product_sub_id){
+        $.ajax({
+            type: "post",
+            url: "/product/product_sub/ajax_pro_sub",
+            data: {product_sub_id : product_sub_id},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                //  商品编号
+                $('#productNo').show();
+                $('#product_No').html(data.productNo);
+                // 商品价格
+                $('#pro_sub_price').show();
+                $('#price').html(data.price);
+                $('#sale_price').html(data.sale_price);
+                // 商品图片
+                if(data.image != ''){
+                    $('#pro_image').show();
+                    $("#image").attr('src','/images/'+data.image);
+                }
+            }
+        });
     }
 </script>
 

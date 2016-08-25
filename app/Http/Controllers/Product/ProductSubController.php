@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Product;
 use Illuminate\Http\Request;
 use App\Product;
 use App\ProductSub;
+use App\Brand;
+use App\Supplier;
 use App\Category;
 use App\OptionGroup;
 use App\Attr;
@@ -23,6 +25,7 @@ class ProductSubController extends AdminBaseController
 	{
 		//  获取左侧菜单
 		$this->data['menus'] = $this->getMeunList();
+		$this->data['breadcrumbs'] = $this->breadcrumbs($request);
 		// 获取当前路由
 		$this->data['route_path'] = $request->path();
 	}
@@ -36,6 +39,49 @@ class ProductSubController extends AdminBaseController
 		$pro = $product->ProductSub;
 		$this->data['product_sub'] = $pro->toArray();
 		return view('product.product.show', $this->data);
+	}
+
+	//  查看子商品详情
+	public function show_details($id) {
+        $pro = array();
+        // 获取子商品信息
+        $product_sub = ProductSub::findOrFail($id);
+		$pro['product_sub_id'] = $id;
+
+        $product = $product_sub->Product;
+        $pro['product'] = $product->toArray();
+        // 获取类别信息
+        $category = Category::getCategoryById($product->category_id);
+        $pro['product']['category'] = $category['name'];
+        // 获取品牌信息
+        $brand = Brand::getBrandById($product->brand_id);
+        $pro['product']['brand'] = $brand['name'];
+        //  获取供应商信息
+        $supplier = Supplier::getSupplierById($product->supplier_id);
+        $pro['product']['supplier'] = $supplier['name'];
+
+        // 获取主商品的属性
+        $public_attrs = json_decode($product->public_attr, true);
+        $attrs = array();
+        foreach($public_attrs as $key=>$public_attr) {
+            $attr = Attr::where('input_name', $key)->first();
+            if($attr->input_box_type == 1) {
+                $attrs[$attr->input_name] = array('name'=>$attr->name, 'value'=>$public_attr);
+            } else {
+                $value = array_values($public_attr);
+                $attrs[$attr->input_name] = array('name'=>$attr->name,'value'=>$value[0]);
+            }
+        }
+        $pro['attrs'] = $attrs;
+
+        $this->data['data'] = $pro;
+        return view('product.product.product_show', $this->data);
+	}
+
+	// ajax 获取子商品信息
+	public function ajax_pro_sub(Request $request) {
+		$pro_sub = ProductSub::findOrFail($request->input('product_sub_id'));
+		echo $pro_sub->toJson();
 	}
 
 	public function create($id) {

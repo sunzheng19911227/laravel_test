@@ -43,7 +43,9 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 	Route::resource('/products', 'ProductController');
 
 	Route::post('/product_sub/ajax_create_form', 'ProductSubController@ajax_create_form');
+	Route::get('/product_sub/show_details/{id}', 'ProductSubController@show_details');
 	Route::get('/product_sub/create/{id}', 'ProductSubController@create');
+	Route::post('/product_sub/ajax_pro_sub', 'ProductSubController@ajax_pro_sub');
 	Route::resource('/product_sub', 'ProductSubController');
 	
 	Route::resource('/category', 'CategoryController');

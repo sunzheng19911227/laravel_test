@@ -79,7 +79,20 @@ return [
             'strict' => false,
             'engine' => null,
         ],
-
+        // 分销测试数据库
+        'fenxiao' => [
+            'driver' => 'mysql',
+            'host' => '192.168.99.225',
+            'port' => '3306',
+            'database' => 'fenxiao',
+            'username' => 'root',
+            'password' => '123456',
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => 'oc_',
+            'strict' => false,
+            'engine' => null,
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),

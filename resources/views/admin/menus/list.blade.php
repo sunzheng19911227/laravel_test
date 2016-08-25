@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    菜单管理
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">权限管理</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -86,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('菜单管理-添加')
                                         <a href="{{ url('/admin/menus/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加数据 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                 </div>
                                 <div class="space15">
@@ -118,8 +107,8 @@
                                             <th>菜单名称</th>
                                             <th>权限路径</th>
                                             <th>IsDisplay</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            @can('菜单管理-修改')<th>Edit</th>@endcan
+                                            @can('菜单管理-删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -128,8 +117,8 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td>{{ $list['route'] }}</td>
                                             <td class="center">{{ $list['is_display'] == '1'?'显示':'隐藏' }}</td>
-                                            <td><a href="{{ url('/admin/menus/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            @can('菜单管理-修改')<td><a href="{{ url('/admin/menus/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
+                                            @can('菜单管理-删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

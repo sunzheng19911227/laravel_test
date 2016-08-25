@@ -17,4 +17,11 @@ class Brand extends Model
     public function Product() {
     	return $this->hasMany(Product::class);
     }
+
+	#########################   业务逻辑 #########################
+	// 根据id获取品牌
+	public static function getBrandById($brand_id, $field = array()){
+		$brand = Brand::findOrFail($brand_id);
+		return $brand->toArray();
+	}
 }

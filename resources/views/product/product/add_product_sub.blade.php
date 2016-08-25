@@ -53,17 +53,7 @@
         <!-- header section end-->
 
         <!-- page heading start-->
-        <div class="page-heading">
-            <h3>
-                Form Validation
-            </h3>
-            <ul class="breadcrumb">
-                <li>
-                    <a href="form_validation.html#">Form</a>
-                </li>
-                <li class="active"> Form Validation </li>
-            </ul>
-        </div>
+        @include('layouts.page_header')
         <!-- page heading end-->
 
         <!--body wrapper start-->
@@ -233,11 +223,12 @@
         });
     }
 
-    function check_box_status(obj) {
-        //alert('已经选中的不可取消!');
-        console.log(obj);
-        obj.attr("checked", true);
-        return false;
+    function check_box_status(_this, type) {
+        if(type == 1){
+            alert('已经选中的不可取消!');
+            console.log(_this);
+            _this.checked = true;
+        }
     }
 
 </script>

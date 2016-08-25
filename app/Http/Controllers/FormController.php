@@ -86,14 +86,16 @@ class FormController extends Controller
 		foreach($checkbox_item as $key=>$item){
 			$checked = '';
 			$disabled = '';
+			$events = '';
 	    	if(!empty($checked_id) && array_search($key, $checked_id) !== false) {
 	    		$checked = 'checked = \"checked\" ';
+	    		$events = 'onclick="check_box_status(this, 1)"';
 	    	}
 	    	if($is_disabled === true) {
 				$disabled = 'disabled = \"disabled\"';
 	    	}
 			$checkbox .= '<label>
-							<input type="checkbox" name="'.$checkbox_name.'[]" '.$checked.' value="'.$key.'" '.$disabled.' onclick="check_box_status(this)"/>'.$item.'
+							<input type="checkbox" name="'.$checkbox_name.'[]" '.$checked.' value="'.$key.'" '.$disabled.' '.$events.'/>'.$item.'
 						  </label>
 						 ';
 		}

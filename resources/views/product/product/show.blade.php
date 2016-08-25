@@ -54,20 +54,7 @@
             <!-- header section end-->
 
             <!-- page heading start-->
-            <div class="page-heading">
-                <h3>
-                    子商品列表
-                </h3>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="editable_table.html#">子商品列表</a>
-                    </li>
-                    <li>
-                        <a href="editable_table.html#">Data Table</a>
-                    </li>
-                    <li class="active"> Editable Table </li>
-                </ul>
-            </div>
+            @include('layouts.page_header')
             <!-- page heading end-->
 
             <!--body wrapper start-->
@@ -132,6 +119,7 @@
                                             <th>上架</th>
                                             <th>添加时间</th>
                                             <th>排序</th>
+                                            <th>Show</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
@@ -147,6 +135,7 @@
                                             <td class="center">{{ $list['is_show'] }}</td>
                                             <td>{{ $list['created_at'] }}</td>
                                             <td>{{ $list['sort_order'] }}</td>
+                                            <td><a href="{{ url('/product/product_sub/show_details/'.$list['id']) }}">Show</a></td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id'].'/edit') }}">Edit</a></td>
                                             <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
                                         </tr>

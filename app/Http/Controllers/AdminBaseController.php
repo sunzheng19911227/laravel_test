@@ -39,8 +39,10 @@ class AdminBaseController extends Controller
 		// 分解路由地址
 		$routes = explode('/', $request->path());
 		$sql = DB::table('permissions');
+		$numeric = array();
 		foreach($routes as $route) {
 			if(is_numeric($route)) {  // 遇到id跳过
+				$numeric[] = $route;
 				continue;
 			}
 			$sql->where('route','like','%'.$route.'%');
@@ -49,6 +51,10 @@ class AdminBaseController extends Controller
 		if($menu->pid != 0) {
 			$m = $this->getSuperiorMenu($menu->pid);
 			array_unshift($m, $menu);
+		}
+		// 替换参数值
+		if( !empty($numeric) ) {
+			$m = $this->replaceRouteParam($m, $numeric);
 		}
 		return $m;
 	}
@@ -61,6 +67,42 @@ class AdminBaseController extends Controller
 			return $this->getSuperiorMenu($m->pid, $array);
 		} else {
 			return $array;
+		}
+	}
+
+	// 替换路由中的参数
+	protected function replaceRouteParam($routes, $numeric) {
+		foreach($routes as $key=>$value) {
+			//var_dump($value->route);
+			// 查找替换参数
+			$start = strpos($value->route, '{');
+			$end = strpos($value->route, '}');
+			if($start == false || $end == false) {
+				continue;
+			}
+			// 替换
+			$param = substr($value->route, $start, $end);
+			$replace = array_shift($numeric);
+			$route = str_replace($param, $replace, $value->route);
+			$routes[$key]->route = $route; 
+		}
+		// 验证是否还存在需要替换的参数
+		$is_replace = false;
+		foreach($routes as $key=>$value) {
+			// 查找替换参数
+			$start = strpos($value->route, '{');
+			$end = strpos($value->route, '}');
+			if($start == false || $end == false) {
+				continue;
+			}
+			$is_replace = true;
+		}
+		if( $is_replace ) {
+			if( !empty($numeric) ) {
+				$this->replaceRouteParam($routes, $numeric);
+			}
+		} else {
+			return $routes;
 		}
 	}
 }
