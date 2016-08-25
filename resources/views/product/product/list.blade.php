@@ -72,10 +72,13 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        <meta name="_token" content="{{ csrf_token() }}">
+                                        @can('主商品列表-添加')
                                         <a href="{{ url('/product/products/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加主商品 <i class="fa fa-plus"></i>
                                         </button></a>
-                                        <meta name="_token" content="{{ csrf_token() }}">
+                                        @endcan
+                                        @can('商品批处理')
                                         <a onclick="batch('delete')"><button id="add—admin" class="btn btn-primary">
                                             批量删除
                                         </button></a>
@@ -85,6 +88,7 @@
                                         <a onclick="batch('hide')"><button id="add—admin" class="btn btn-primary">
                                             批量下架
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>

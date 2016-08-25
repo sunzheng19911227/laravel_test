@@ -73,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('选项组管理-关联属性')
                                         <a href="{{ url('/product/option_group/relevance/'.$option_group['id']) }}"><button id="add—admin" class="btn btn-primary">
                                             关联属性 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>

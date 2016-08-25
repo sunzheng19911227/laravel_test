@@ -73,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('选项组管理-添加')
                                         <a href="{{ url('/product/option_group/create') }}"><button id="add—admin" class="btn btn-primary">
                                             添加选项组 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -115,7 +117,7 @@
                                             <th>选项组名称</th>
                                             <th>Status</th>
                                             <th>查看选项</th>
-                                            <th>Edit</th>
+                                            @can('选项组管理-修改')<th>Edit</th>@endcan
                                             <!--<th>Delete</th>-->
                                         </tr>
                                     </thead>
@@ -126,7 +128,7 @@
                                             <td>{{ $list['name'] }}</td>
                                             <td class="center">{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/option_group/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/option_group/'.$list['id'].'/edit') }}">Edit</a></td>
+                                            @can('选项组管理-修改')<td><a href="{{ url('/product/option_group/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
                                             <!--<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>-->
                                         </tr>
                                         @endforeach
