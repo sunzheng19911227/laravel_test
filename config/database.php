@@ -68,11 +68,11 @@ return [
         //  商城测试数据库
         'mall' => [
             'driver' => 'mysql',
-            'host' => '192.168.99.225',
-            'port' => '3306',
-            'database' => 'mallnew',
-            'username' => 'root',
-            'password' => '123456',
+            'host' => env('MALL_DB_HOST', 'localhost'),
+            'port' => env('MALL_DB_PORT', '3306'),
+            'database' => env('MALL_DB_DATABASE', 'forge'),
+            'username' => env('MALL_DB_USERNAME', 'forge'),
+            'password' => env('MALL_DB_PASSWORD', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => 'oc_',
@@ -82,11 +82,11 @@ return [
         // 分销测试数据库
         'fenxiao' => [
             'driver' => 'mysql',
-            'host' => '192.168.99.225',
-            'port' => '3306',
-            'database' => 'fenxiao',
-            'username' => 'root',
-            'password' => '123456',
+            'host' => env('FX_DB_HOST', 'localhost'),
+            'port' => env('FX_DB_PORT', '3306'),
+            'database' => env('FX_DB_DATABASE', 'forge'),
+            'username' => env('FX_DB_USERNAME', 'forge'),
+            'password' => env('FX_DB_PASSWORD', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => 'oc_',

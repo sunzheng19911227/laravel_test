@@ -138,8 +138,8 @@
                                             <th>下架状态</th>
                                             <th>查看子商品</th>
                                             <th>Show</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            @can('主商品列表-编辑')<th>Edit</th>@endcan
+                                            @can('主商品列表-删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -152,8 +152,8 @@
                                             <td>{{ $list['status'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/'.$list['id']) }}">查看子商品</a></td>
                                             <td><a href="{{ url('/product/products/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            @can('主商品列表-编辑')<td><a href="{{ url('/product/products/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
+                                            @can('主商品列表-删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

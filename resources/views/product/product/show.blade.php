@@ -73,9 +73,11 @@
                             <div class="adv-table editable-table ">
                                 <div class="clearfix">
                                     <div class="btn-group">
+                                        @can('子商品列表-添加')
                                         <a href="{{ url('/product/product_sub/create/'.$product['id']) }}"><button id="add—admin" class="btn btn-primary">
                                             添加子商品 <i class="fa fa-plus"></i>
                                         </button></a>
+                                        @endcan
                                     </div>
                                     <div class="btn-group pull-right">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i>
@@ -120,8 +122,9 @@
                                             <th>添加时间</th>
                                             <th>排序</th>
                                             <th>Show</th>
-                                            <th>Edit</th>
-                                            <th>Delete</th>
+                                            <th>查看图片</th>
+                                            @can('子商品列表-修改')<th>Edit</th>@endcan
+                                            @can('子商品列表-删除')<th>Delete</th>@endcan
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -136,8 +139,9 @@
                                             <td>{{ $list['created_at'] }}</td>
                                             <td>{{ $list['sort_order'] }}</td>
                                             <td><a href="{{ url('/product/product_sub/show_details/'.$list['id']) }}">Show</a></td>
-                                            <td><a href="{{ url('/product/product_sub/'.$list['id'].'/edit') }}">Edit</a></td>
-                                            <td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>
+                                            <td><a href="{{ url('/product/product_image/'.$list['id']) }}">查看图片</a></td>
+                                            @can('子商品列表-修改')<td><a href="{{ url('/product/product_sub/'.$list['id'].'/edit') }}">Edit</a></td>@endcan
+                                            @can('子商品列表-删除')<td><a data-toggle="modal" data-target="#modal-delete" href="javascript:;" onclick="setDeleteFromAction({{ $list['id']}} );">Delete</a></td>@endcan
                                         </tr>
                                         @endforeach
                                     </tbody>

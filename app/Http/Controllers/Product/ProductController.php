@@ -45,7 +45,7 @@ class ProductController extends AdminBaseController
 
     public function index(Request $request) {
         $this->data['name'] = $request->has('name')?$request->input('name'):'';
-        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(10);
+        $lists = Product::where('name','like','%'.$this->data['name'].'%')->paginate(4);
         foreach($lists as $key=>$list){
             // 验证子商品下架状态
             $product = product::findOrFail($list->id);

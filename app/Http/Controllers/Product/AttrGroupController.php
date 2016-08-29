@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Product;
 use Illuminate\Http\Request;
 use App\AttrGroup;
 use App\Attr;
-use App\category;
+use App\Category;
 use App\Product;
 use App\Http\Requests;
 use App\Http\Controllers\AdminBaseController;

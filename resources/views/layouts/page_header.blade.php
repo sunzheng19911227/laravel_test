@@ -1,4 +1,5 @@
 <!-- page heading start-->
+@if(!empty($breadcrumbs))
 <div class="page-heading">
     <h3>
         <?php $title = $breadcrumbs[0];
@@ -28,4 +29,5 @@
         <li class="active"> Editable Table </li>-->
     </ul>
 </div>
+@endif
 <!-- page heading end-->

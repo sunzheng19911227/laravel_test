@@ -47,6 +47,10 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => '
 	Route::get('/product_sub/create/{id}', 'ProductSubController@create');
 	Route::post('/product_sub/ajax_pro_sub', 'ProductSubController@ajax_pro_sub');
 	Route::resource('/product_sub', 'ProductSubController');
+
+	// 商品图片
+	Route::post('/product_image/uploads', 'ProductImageController@uploads');
+	Route::resource('/product_image', 'ProductImageController');
 	
 	Route::resource('/category', 'CategoryController');
 	Route::resource('/supplier', 'SupplierController');

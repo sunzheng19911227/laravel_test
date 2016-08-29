@@ -48,7 +48,8 @@ class AdminBaseController extends Controller
 			$sql->where('route','like','%'.$route.'%');
 		}
 		$menu = $sql->first();
-		if($menu->pid != 0) {
+		$m = array();
+		if(!empty($menu) && $menu->pid != 0) {
 			$m = $this->getSuperiorMenu($menu->pid);
 			array_unshift($m, $menu);
 		}
